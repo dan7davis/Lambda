@@ -1,0 +1,578 @@
+<!-- YES Popup -->
+<style>
+    .ui-dialog {
+        top: 0;
+        left: 0;
+        padding: 0em;
+        border:1px;
+        z-index: 9998;
+    }
+    .ui-dialog .ui-dialog-titlebar {
+        border:1px;
+        background: #0075b4;
+    }
+    .ui-dialog .ui-dialog-content {
+        border: 0;
+        padding: 20px;
+        font-size:18px;
+        line-height: 25px;
+        color: #000000;
+        background-color: #ffffff;
+    }
+
+    .ui-dialog-title {
+        color: white;
+        font-size: 25;
+        padding: 5px;
+        font-weight: lighter;
+    }
+
+    .ui-dialog .ui-dialog-titlebar-close span {
+        display: block;
+        margin: -8px 0px 0px -8px;
+        color: black;
+    }
+
+    .ui-button-icon-only .ui-icon {
+        left: 47%;
+        margin-left: -8px;
+        background-image: url(https://code.jquery.com/ui/1.11.2/themes/smoothness/images/ui-icons_888888_256x240.png);
+    }
+
+    .ui-dialog .ui-dialog-buttonpane {
+        text-align: left;
+        border-width: 1px 0 0 0;
+        background-image: none;
+        margin-top: .5em;
+        padding: .3em 1em .5em .4em;
+        background-color: #ffffff;
+    }
+    .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+        float: right;
+
+    }
+    .ui-dialog .ui-dialog-buttonpane button {
+        margin: .5em .4em .5em 0;
+        cursor: pointer;
+
+    }
+
+
+    .ui-dialog .ui-dialog-buttonpane button :focus {
+        margin: .5em .4em .5em 0;
+        cursor: pointer;
+        padding: 0em;
+    }
+
+    .ui-dialog .ui-resizable-se {
+        width: 12px;
+        height: 12px;
+
+    }
+    .ui-draggable-handle {
+        -ms-touch-action: none;
+        touch-action: none;
+    }
+
+    .ui-dialog-titlebar {
+        border: 1px;
+        border-radius: 5px 5px 0 0;
+        background: #0075b4;
+    }
+
+    .buttonTitle {
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    .correct {
+        color: green;
+    }
+
+    .incorrect {
+        color: red;
+    }
+
+    .sequence-bottom {
+        z-index: 0;
+    }
+
+    #name-pop {
+        padding-bottom: 20px;
+    }
+
+    .emerald-flat-button {
+        font-weight: lighter;
+        padding: 10px !important;
+        font-size: 18px !important;
+        color: black !important;
+        text-align: center !important;
+        background: white !important;
+    }
+    .emerald-flat-button:hover {
+        box-shadow: inset 0 -2px #0079BB !important;
+    }
+    .emerald-flat-button:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .emerald-flat-button:focus {
+        outline: none;
+        border: 2 !important;
+        box-shadow: none !important;
+    }
+
+    a.tip {
+        color: white;
+        background-color: #C5C6C5;
+        font-weight: bolder;
+        font-size: 12px;
+        z-index: 9999 !important;
+        border-radius: 9px;
+    }
+    a.tip:hover {
+        cursor: help;
+        position: relative;
+        z-index: 9999 !important;
+    }
+    a.tip span {
+        display: none;
+        z-index: 9999 !important;
+    }
+    a.tip:hover span {
+        border: #c0c0c0 1px dotted;
+        color: black;
+        padding: 5px 20px 5px 5px;
+        font-weight: normal;
+        display: block;
+        z-index: 9999 !important;
+        background: #f0f0f0;
+        left: 0px;
+        margin: 10px;
+        width: 250px;
+        position: absolute;
+        top: 10px;
+        text-decoration: none
+    }
+
+    .ui-dialog-buttonpane .ui-widget-content .ui-helper-clearfix {
+        margin: 0;
+        z-index: -1;
+    }
+
+    #closingin {
+        font-size: 80%;
+        color: grey;
+    }
+
+    #contactUs {
+        display: none;
+    }
+
+</style>
+
+
+<!-- <a href="#" class="p-holder" id="contactUs">Show new retrieval question!</a> -->
+<button class="emerald-flat-button" id="contactUs" onclick="revealPop()">Show new retrieval question!</button>
+<img src="https://placekitten.com/g/2/2" style="filter: brightness(0) invert(1)"/>
+<div id="dialog" title="Improve your memory!">
+    <input autofocus type="text" style="display: none">
+    <h3 id="name-pop" class="hd hd-2 problem-header"></h3>
+    <p style="margin-bottom: 5px" id="text" class="wrapper-problem-response"></p>
+    <p id="closingin"></p>
+
+
+    <a id="tool-spot" style="float:left; clear:left; margin-bottom:0px;" href="#tool-spot" class="tip"><b>&nbsp;&nbsp;&nbsp;?&nbsp;&nbsp;&nbsp;</b><span>We've inserted these questions throughout the course to help boost your memory of what you've learned. By reactivating the bits of information in your brain like this, it strengthens the memories and securely stores all of your exciting new knowledge!</span></a>
+
+
+</div>
+<img src="/static/corr.png" alt="" style="display:none;"/>
+<img src="/static/inc.png" alt="" style="display:none;"/>
+
+<script>
+
+    var server = "<host>:<port>";
+
+    var sectionId;
+    var seq;
+    var vert;
+    var origin;
+    var username;
+    var userid;
+    var course;
+    var dialogAnswered = false;
+    var correctness = false;
+    var trackerArray;
+
+    /**
+     * Gets the user data and course-location.
+     * @param {object} callback - The function that is called after the server
+     * @param {*} arg1 - Argument for the callback function
+     */
+    function get_data(callback,arg1) {
+        username = analytics._user._getTraits().username;
+        userid = analytics.user()._getId();
+        var url = window.location.href;
+        var split = url.split("/");
+        sectionId = split[6];
+        seq = split[7];
+        var block = $('#sequence-list .nav-item.active').data('id');
+        vert = block.split("@").pop();
+        course = split[4].split(":")[1].split("+")[1];
+        origin = sectionId+"/"+seq+"/"+vert;
+        console.log("user: " + userid);
+        console.log("course: " + course);
+        console.log("origin: " + origin);
+        console.log("section: " + sectionId);
+        console.log("vertical: " + vert);
+
+        //Check for old verticals
+        if (trackerArray.length > 0){
+            var tracker = trackerArray.pop();
+            $.ajax(tracker.settings);
+        }
+
+        // RANDOM ASSIGNMENT
+        // only odd userIds get the popup
+        var mobile = false;
+        if( navigator.userAgent.match(/Android/i)
+            || navigator.userAgent.match(/webOS/i)
+            || navigator.userAgent.match(/iPhone/i)
+            || navigator.userAgent.match(/iPad/i)
+            || navigator.userAgent.match(/iPod/i)
+            || navigator.userAgent.match(/BlackBerry/i)
+            || navigator.userAgent.match(/Windows Phone/i)
+            || (window.innerWidth <= 800 && window.innerHeight <= 600)
+        ) {
+            mobile = true;
+        }
+
+        if(!mobile){
+            //1 to 3 seconds delay
+            var r = Math.floor(Math.random())+3;
+            console.log("Popup timeout: " + r + " seconds");
+            setTimeout(showPopup, r * 1000);
+        }
+        callback(arg1);
+    }
+
+    /**
+     * The function to send he log to the server
+     */
+    function log() {
+        //settings for the ajax request
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": server+"/api/loguser",
+            "method": "POST",
+            "data":
+                {
+                    "user": userid,
+                    "courseId": course,
+                    "section": sectionId,
+                    "verticalId": vert,
+                    "eventState": true
+                },
+
+            success: function(response) {
+                console.log(response);
+            }
+        };
+
+        //saving data for page close
+        var tracker = {
+            'vertical': vert,
+            'settings': settings
+        };
+
+        //setting the closing indicator boolean to false
+        tracker.settings.data.eventState = false;
+
+        //Remove exes closing data
+        if (trackerArray.length > 0){
+            trackerArray = [];
+        }
+
+        //saves an set of log data for the page close function
+        trackerArray.push(tracker);
+
+        //Sending data to sever
+        $.ajax(settings);
+    }
+
+    // Current problem that is loaded in memory
+    var currentProblem;
+
+    /**
+     * Sends request to the server for the popup data.
+     */
+    function showPopup(button) {
+        if(button == undefined){
+            button = false;
+        }
+
+        $( "#contactUs").css('display', 'unset');
+        //Request settings
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": server+"/api/popupRequest",
+            "method": "POST",
+            "data":
+                {
+                    "user": userid,
+                    "courseId": course,
+                    "section": sectionId,
+                    "verticalId": vert,
+                    "button": button
+                },
+            success: function(response) {
+                console.log("building popup");
+                buildDialog(response);
+            }
+        };
+
+        //Sending data to sever
+        $.ajax(settings);
+    }
+
+    /**
+     * shows the dialog box
+     */
+    $(function() {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        // this initializes the dialog (and uses some common options that I do)
+        $("#dialog").dialog({
+            autoOpen : false,
+            modal : true,
+            width: w * 0.65,
+            height: h * 0.8,
+            draggable: false,
+            close: sendAnswer,
+            hide: {
+                effect: "fade",
+                duration: 10
+            },
+            buttons: { "Skip": function() { $(this).dialog("close"); } }
+        });
+    });
+
+    /**
+     * reveals the popup
+     */
+    function revealPop() {
+        showPopup(true);
+        return false;
+    }
+
+    /**
+     * called when the pop is closed
+     */
+    function sendAnswer() {
+        console.log("dialog closed with: answered as " + dialogAnswered + " " + "and correct as " + correctness);
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": server+"/api/popupResponse",
+            "method": "POST",
+            "data":
+                {
+                    "user": userid,
+                    "courseId": course,
+                    "section": sectionId,
+                    "verticalId": vert,
+                    "problemId": currentProblem.id,
+                    "answered": dialogAnswered,
+                    "correct": correctness
+                },
+            success: function(response) {
+                console.log(response);
+            }
+        };
+        $.ajax(settings);
+    }
+
+    /**
+     * Shows that you answered correct.
+     */
+    function correct() {
+        $('#feedback').addClass("correct");
+        $('#feedback-icon').addClass("correct");
+        console.log("this was correct");
+        $(".tip").hide();
+        $('#text').html( '<div class="wrapper-problem-response"><p style="text-align: center">Correct! Keep up the great work!</p><br><p style="text-align: center"><img width="80px" src="/static/corr.png" alt="correct"></p></div>' ).css({ 'color': '#009b00', 'font-size': '150%', 'text-align': 'center' });
+        dialogAnswered = true;
+        correctness = true;
+        var n = 3;
+        setTimeout(countDown,1000);
+
+        function countDown(){
+            n--;
+            if(n > 1){
+                setTimeout(countDown,1000);
+                document.getElementById("closingin").innerHTML = "Closing in " + n + " " + "seconds";
+            }
+            else if (n == 1) {
+                setTimeout(countDown,1000);
+                document.getElementById("closingin").innerHTML = "Closing in " + n + " " + "second";
+            }
+            else if (n == 0) {
+                $('#dialog').dialog('close');
+                document.getElementById("closingin").innerHTML = "";
+                $(".tip").show();
+                $('#text').css({ 'color': 'black', 'font-size': '100%' });
+            }
+        }
+    }
+
+
+    /**
+     * Shows that you answered incorrect.
+     */
+    function inCorrect() {
+        $('#feedback').addClass("incorrect");
+        $('#feedback-icon').addClass("incorrect");
+        console.log("this was incorrect");
+        dialogAnswered = true;
+        var origText = $('#text').html();
+        $(".tip").hide();
+        $('#text')
+            .html( '<div class="wrapper-problem-response"><p style="text-align: center">Incorrect, please try again!</p><br><p style="text-align: center"><img width="80px" src="/static/inc.png" alt="incorrect"></p></div>' )
+            .css({ 'color': '#C84B4B', 'font-size': '150%', 'text-align': 'center' });
+        dialogAnswered = true;
+        correctness = false;
+        sendAnswer();
+        var n = 3;
+        setTimeout(countDown,1000);
+
+        function countDown(){
+            n--;
+            if(n > 1){
+                setTimeout(countDown,1000);
+                document.getElementById("closingin").innerHTML = "Returning to question in " + n + " " + "seconds";
+            }
+            else if (n == 1) {
+                setTimeout(countDown,1000);
+                document.getElementById("closingin").innerHTML = "Returning to question in " + n + " " + "second";
+            }
+            else if (n == 0) {
+                document.getElementById("closingin").innerHTML = "";
+                $(".tip").show();
+                $('#text').html(origText).css({ 'color': 'black', 'font-size': '100%' });
+            }
+        }
+
+    }
+
+
+    /**
+     * builds the dialog box using a problem from the database.
+     */
+    function buildDialog(problem) {
+        //Clear old feedback text
+        var feedbackBox= $('#feedback');
+        $('#feedback-text').text("");
+        feedbackBox.className = "correctness";
+        $('#feedback-icon').className = "feedback-icon";
+
+        currentProblem = problem;
+
+        //clears old buttons
+        var buttonSet = $('#dialog').parent().find('.ui-dialog-buttonset').get(0);
+        while (buttonSet.firstChild) {
+            buttonSet.removeChild(buttonSet.firstChild);
+        }
+
+        // Display content
+        var buttonTitle =  document.createElement("p");
+        buttonTitle.innerText = "Select your response below";
+        buttonTitle.classList.add("buttonTitle");
+        buttonSet.appendChild(buttonTitle);
+        //basic problem information is loaded in dialog window
+        $("#name").text(currentProblem.name);
+        document.getElementById('text').innerHTML = currentProblem.text;
+
+
+
+        //sets the question handler for a Multiple Choice question
+        if (currentProblem.type == "multiplechoiceresponse" || currentProblem.type == "choiceresponse"){
+            console.log("multiplechoiceresponse");
+            //builds a button for every choice
+            for(var choice in currentProblem.choices){
+                var newButton = document.createElement("BUTTON");
+                newButton.innerHTML = currentProblem.choices[choice];
+                newButton.id = "option_"+choice;
+                newButton.className += "emerald-flat-button";
+                //sets the button event
+                if (parseInt(currentProblem.answer) == choice) {
+                    newButton.onclick = function () {
+                        correct();
+                    };
+                }else {
+                    newButton.onclick = function () {
+                        inCorrect();
+                    };
+                }
+                //adds button to dialog
+                buttonSet.appendChild(newButton);
+
+            }
+        }
+
+        //sets the question handler for a Multiple Choice question
+        if (currentProblem.type == "numericalresponse"){
+
+            console.log("numericalresponse");
+
+            //build a submit button
+            var inputBox = document.createElement("input");
+            inputBox.type = 'number';
+            var button = document.createElement("button");
+            button.id = "selectionButton";
+            button.innerHTML = "answer";
+            button.className = "emerald-flat-button";
+
+            //set the button event
+            button.onclick = function () {
+                var value = inputBox.value;
+                if (parseInt(value) == parseInt(currentProblem.answer)){
+                    correct();
+                }else {
+                    inCorrect();
+                }
+            };
+
+            //add button and select to dialog
+            buttonSet.appendChild(inputBox);
+            buttonSet.appendChild(button);
+        }
+
+        $("#dialog").dialog("open");
+        MathJax.Hub.Typeset();
+    }
+
+    /**
+     * Called on page load
+     */
+    $(window).ready(function () {
+        setTimeout(function () {
+            //If there is no page close data array make one
+            if(!trackerArray){
+                trackerArray = [];
+            }
+            //get the data and log it
+            get_data(log);
+        },3000);
+    });
+
+    //Debug message for dialogue loading
+    $( "#dialog" ).load(console.log("dialogue loaded"));
+
+
+
+</script>
