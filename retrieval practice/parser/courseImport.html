@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>courseImport</title>
+    <script src="jquery-3.2.0.min.js"></script>
+    <script src="classes/CourseSection.js"></script>
+    <script src="classes/SubSection.js"></script>
+    <script src="classes/Vertical.js"></script>
+    <script src="classes/Problem.js"></script>
+    <script src="classes/DataStructure.js"></script>
+    <script src="courseImport.js"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .shown {
+            display: block;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="content">
+    <p id="text">
+
+    </p>
+<form method="post">
+    <input id="build" class="shown" type="button" name="build data" value="build and upload" onclick="course.buildDataStructure()">
+    <input id="removeseq" class="hidden" type="button" name="manual remove" value="start removal process" onclick="course.removeseq()">
+    <input id="remove" class="hidden" type="button" name="remove" value="remove" onclick="course.remove()">
+    <input id="next" class="hidden" type="button" name="next" value="next" onclick="course.next()">
+</form>
+</div>
+
+
+<img src="http://placekitten.com/g/2/2" onload="main()" style="filter: brightness(0) invert(1)"/>
+</body>
+
+</html>

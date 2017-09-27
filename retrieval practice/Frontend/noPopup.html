@@ -1,0 +1,117 @@
+<!-- NO -->
+
+<script type="text/javascript">
+    var server = "<host>:<port>";
+    
+    var sectionId;
+    var seq;
+    var vert;
+    var origin;
+    var username;
+    var userid;
+    var course;
+    var trackerArray;
+
+
+    /**
+     * Gets the user data and course-location.
+     * @param {object} callback - The function that is called after the server
+     * @param {*} arg1 - Argument for the callback function
+     */
+    function RPget_data(callback,arg1) {
+        username = analytics._user._getTraits().username;
+        userid = analytics.user()._getId();
+        var url = window.location.href;
+        var split = url.split("/");
+        sectionId = split[6];
+        seq = split[7];
+        var block = $('#sequence-list .nav-item.active').data('id');
+        vert = block.split("@").pop();
+        course = split[4].split(":")[1].split("+")[1];
+        origin = sectionId+"/"+seq+"/"+vert;
+        console.log("user: " + userid);
+        console.log("course: " + course);
+        console.log("origin: " + origin);
+        console.log("section: " + sectionId);
+        console.log("vertical: " + vert);
+
+        //Check for old verticals
+        //And handles old page close data
+        if (trackerArray.length > 0){
+            var tracker = trackerArray.pop();
+            $.ajax(tracker.settings);
+        }
+
+
+        callback(arg1);
+    }
+
+    /**
+     * The function to send he log to the server
+     */
+    function RPlog() {
+        //settings for the ajax request
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": server+"/api/loguser",
+            "method": "POST",
+            "data":
+                {
+                    "user": userid,
+                    "courseId": course,
+                    "section": sectionId,
+                    "verticalId": vert,
+                    "eventState": true
+                },
+
+            success: function(response) {
+                console.log(response);
+            }
+        };
+
+        //saving data for page close
+        var tracker = {
+            'vertical': vert,
+            'settings': settings
+        };
+
+        //setting the closing indicator boolean to false
+        tracker.settings.data.eventState = false;
+
+        //Remove exes closing data
+        if (trackerArray.length > 1){
+            trackerArray = [];
+        }
+
+        //saves an set of log data for the page close function
+        trackerArray.push(tracker);
+
+        //Sending data to sever
+        $.ajax(settings);
+    }
+
+
+    /**
+     * called on page load.
+     */
+    function myMain() {
+        //If there is no page close data array make one
+        if(!trackerArray){
+            trackerArray = [];
+        }
+        //get the data and log it
+        RPget_data(RPlog);
+
+        //Set the page unload event to when window is closed
+        $(window).on("onbeforeunload",function () {
+           var tracker = trackerArray.pop();
+           $.ajax(tracker.settings);
+        });
+
+
+    }
+
+</script>
+
+<img id="contactUs" src="https://placekitten.com/g/2/2" onload="myMain()" style="filter: brightness(0) invert(1)"/>
