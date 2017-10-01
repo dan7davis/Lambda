@@ -1,0 +1,1124 @@
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+    <script src="/static/mapped.js" onloadeddata=""></script>
+
+    <style type="text/css">
+
+        #videobar {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            height: 100px;
+        }
+
+        #questionbar {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            height: 100px;
+        }
+
+        #timebar {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            height: 100px;
+        }
+
+        #videotex {
+            margin: 20px;
+            width: 200px;
+            height: 50px;
+            font-size: 140%;
+        }
+
+        #questiontex {
+            margin: 20px;
+            width: 200px;
+            height: 50px;
+            font-size: 140%;
+        }
+
+        #timetex {
+            margin: 20px;
+            width: 200px;
+            height: 50px;
+            font-size: 140%;
+        }
+        #three {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #header {
+            font-style: italic;
+            font-family: 'Abel';
+            font-weight: bold;
+            display: flex;
+            font-size: 240%;
+        }
+
+        .emerald-flat-button-small {
+            position: relative !important;
+            display: block !important;
+            vertical-align: top !important;
+            width: 15% !important;
+            clear: both;
+            height: 30px !important;
+            opacity: 1 !important;
+            font-family: 'Abel', sans-serif !important;
+            padding: 0 !important;
+            font-size: 15px !important;
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+            background: #2ecc71 !important;
+            border: 0 !important;
+            border-bottom: 2px solid #28be68 !important;
+            cursor: pointer !important;
+            -webkit-box-shadow: inset 0 -2px #28be68 !important;
+            box-shadow: inset 0 -2px #28be68 !important;
+            transition: all 0.3s ease 0s !important;
+        }
+
+        .titel {
+            text-align: center;
+        }
+
+        .bar {
+            width: 100%;
+        }
+
+        .text {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .emerald-flat-button-small:hover {
+            opacity: 0.75 !important;
+        }
+
+        .emerald-flat-button-small:active {
+            top: 1px !important;
+            outline: none !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+        }
+
+        #vidIntended {
+            max-width: 250px
+        }
+
+        #questionIntended {
+            max-width: 250px
+        }
+
+        #timeIntended {
+            max-width: 250px
+        }
+
+        #subConfirm {
+            visibility: hidden;
+            display: none;
+            text-align: center;
+            font-weight: bolder;
+            color: #2ecc71;
+        }
+
+        #subError {
+            visibility: hidden;
+            display: none;
+            text-align: center;
+            font-weight: bolder;
+            color: #C84B4B;
+        }
+
+        .vidFeedback {
+            font-weight: bolder;
+        }
+
+        .quizFeedback {
+            font-weight: bolder;
+        }
+
+        .timeFeedback {
+            font-weight: bolder;
+        }
+
+        #replace {
+            display: none;
+
+        }
+        #startPlan {
+            display: block;
+        }
+    </style>
+
+
+
+
+
+
+
+
+
+    <script src="/static/pbref.js"></script>
+
+    <script>
+
+        //////////////////////////////////////////////
+        //               Logging User Data           //
+        //////////////////////////////////////////////
+
+        var WRONG_USER = "This modal is inactive.";
+
+        var TIME_PER_WEEK = 6;
+        var SERVER_URL = "https://lambda-rp.ewi.tudelft.nl:8080";
+
+        var chap;
+        var seq;
+        var vert;
+        var origin;
+        var username;
+        var userid;
+        var myId;
+        var course;
+        var time;
+        var datas = {};
+        var responseDatas = {};
+        var corrVid;
+        var corrQuiz;
+
+        function quantget_data(callback,arg1,arg2,arg3) {
+            datas = {};
+            username = analytics._user._getTraits().username;
+            var url = window.location.href;
+            var split = url.split("/");
+            chap = split[6];
+            datas.week = chap;
+            seq = split[7];
+            var block = $('#sequence-list .nav-item.active').data('id');
+            vert = block.split("@").pop();
+            course = split[4].split(":")[1];
+            origin = chap+"/"+seq+"/"+vert;
+            userid = analytics.user()._getId();
+            datas.id = userid;
+            datas.course = course;
+            datas.time = new Date();
+            datas.index = datas.id + "_" + datas.time.getTime();
+            datas.vert = vert;
+            $('#dx-username').text(username);
+
+            console.log("user: " + userid);
+            console.log("course: " + course);
+            console.log("origin: " + origin);
+            console.log("week: " + chap);
+
+            var mobile = false;
+            if( navigator.userAgent.match(/Android/i)
+                || navigator.userAgent.match(/webOS/i)
+                || navigator.userAgent.match(/iPhone/i)
+                || navigator.userAgent.match(/iPad/i)
+                || navigator.userAgent.match(/iPod/i)
+                || navigator.userAgent.match(/BlackBerry/i)
+                || navigator.userAgent.match(/Windows Phone/i)
+                || (window.innerWidth <= 800 && window.innerHeight <= 600)
+            ) {
+                mobile = true;
+            }
+
+            if (!mobile && (userid % 4 == 1 || userid % 4 == 3 || userid == 14917292)) {
+                if (callback != undefined) {
+                    callback(arg1, arg2, arg3)
+                }
+            } else {
+                $("#startPlan").empty().text(WRONG_USER)
+            }
+        }
+
+        //////////////////////////////////////////////
+        // Retrieve Current Weeks Vid and Quiz Info //
+        //////////////////////////////////////////////
+
+        function mapping() {
+            for (var i=0; i < mapped.length; i++) {
+                if(mapped[i][0] == datas.week) {
+                    corrVid = mapped[i][1];
+                    corrQuiz = mapped[i][2];
+                }
+            }
+        }
+
+
+        //////////////////////////////////////////////
+
+
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+
+    </script>
+</head>
+<div id="startPlan">
+    <script>
+
+
+        // ***************************************************************
+        // ACTIVITY DATA KEYS
+
+        // TIME: datas.time
+        // Videos: datas.watched
+        // Quiz: datas.uniqueSubmits
+        // ***************************************************************
+
+
+
+        //////////////////////////////////////////////
+        //          Logging User Video Activity       //
+        //////////////////////////////////////////////
+
+
+
+        //this function is called by the API
+        $( "#startPlan" ).ready(function() {
+            setTimeout(function () {
+                quantget_data(quantlog,zgLog,qgLog,vgLog);
+                datas.quantGoals = {};
+                quantSetup();
+            },3000);
+
+        });
+
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+
+
+        //////////////////////////////////////////////
+        //          Logging User Quiz Activity       //
+        //////////////////////////////////////////////
+        var subs = [];
+        var uniqueSubs =[];
+
+        setTimeout(function(){
+            for (i=0; i<100; i++) {
+                document.getElementsByClassName("submit btn-brand")[i].addEventListener("click", myFunction);
+            }
+        }, 3000);
+
+
+        function myFunction() {
+            subs.push(this.parentNode.parentNode.parentNode.parentNode.id);
+            //console.log(subs);
+            datas.submits = subs;
+            $.each(subs, function(i, el){
+                if($.inArray(el, uniqueSubs) === -1) uniqueSubs.push(el);
+            });
+            //console.log(uniqueSubs.length);
+            datas.uniqueSubmits = uniqueSubs.length;
+            datas.time = new Date();
+            datas.index = datas.id + "_" + datas.time.getTime();
+            //console.log(datas);
+        }
+
+
+
+
+        // window.onbeforeunload = function() {
+        //  sendData();
+        // };
+
+
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+
+
+
+
+
+    </script>
+
+    <body id="bars">
+    <p id="header">Progress towards your goals this week:</p>
+    <br>
+    <div id="three">
+        <div id="col1">
+            <div class="vidFeedback titel">Videos</div>
+            <div id="videobar" class="bar"></div>
+            <div id="vidIntended" class="text"></div>
+        </div>
+        <div id="col2">
+            <div class="quizFeedback titel">Questions</div>
+            <div id="questionbar" class="bar"></div>
+            <div id="questionIntended" class="text"></div>
+
+        </div>
+        <div id="col3">
+            <div class="timeFeedback titel">Time (Hours)</div>
+            <div id="timebar" class="bar"></div>
+            <div id="timeIntended" class="text"></div>
+
+        </div>
+
+    </div>
+    </body>
+
+    <p class="noPlan"></p>
+
+
+
+    <script type="text/javascript">
+        function barGen() {
+            $( "#videobar" ).empty();
+            $( "#questionbar" ).empty();
+            $( "#timebar" ).empty();
+// progressbar.js@1.0.0 version is used
+// Docs: http://progressbarjs.readthedocs.org/en/1.0.0/
+
+            var vidActual = Number(responseDatas.totalVidWatched);
+            var vidIntended = Number(responseDatas.rVid);
+            var vidScaled = vidActual/vidIntended;
+            if (vidActual > vidIntended) {
+                vidScaled = 1;
+            }
+
+            var questionActual = Number(responseDatas.totalSubmits);
+            var questionIntended = Number(responseDatas.rQuiz);
+            var questionScaled = questionActual/questionIntended;
+            if (questionActual > questionIntended) {
+                questionScaled = 1;
+            }
+
+
+            var timeActual = Number(responseDatas.totalTimeSite);
+            var secs    = timeActual;
+            var hours   = (secs / 60) / 60;
+            var hoursR  = Math.floor(hours);
+            timeActual = hours;
+            var timeIntended = Number(responseDatas.rTime);
+            var timeScaled = timeActual/timeIntended;
+            if (timeActual > timeIntended) {
+                timeScaled = 1;
+            }
+
+            textgen(0);
+
+
+///////////////////////////////////////////////////////////
+//            Video Viz                                   //
+///////////////////////////////////////////////////////////
+
+            var bar = new ProgressBar.SemiCircle(videobar, {
+                    strokeWidth: 8,
+                    color: '#FFEA82',
+                    trailColor: '#eee',
+                    trailWidth: 8,
+                    easing: 'easeInOut',
+                    duration: 1400,
+                    svgStyle: null,
+                    text: {
+                        value: '1',
+                        alignToBottom: false
+                    },
+                    from: {color: '#ffb366'},
+                    to: {color: '#00e600'},
+                    // Set default step function for all animate calls
+                    step: (state, bar) => {
+                    bar.path.setAttribute('stroke', state.color);
+            var value = Math.round(bar.value() * vidIntended);
+            if (value === 0) {
+                bar.setText('');
+            } else {
+                bar.setText(value);
+            }
+
+            bar.text.style.color = state.color;
+        }
+        });
+            bar.text.style.fontFamily = '"Abel", Helvetica, sans-serif';
+            bar.text.style.fontSize = '2rem';
+
+            bar.animate(vidScaled);  // Number from 0.0 to 1.0
+
+///////////////////////////////////////////////////////////
+//            Question Viz           //
+///////////////////////////////////////////////////////////
+
+            var bar2 = new ProgressBar.SemiCircle(questionbar, {
+                    strokeWidth: 8,
+                    color: '#FFEA82',
+                    trailColor: '#eee',
+                    trailWidth: 8,
+                    easing: 'easeInOut',
+                    duration: 1400,
+                    svgStyle: null,
+                    text: {
+                        value: '1',
+                        alignToBottom: false
+                    },
+                    from: {color: '#ffb366'},
+                    to: {color: '#00e600'},
+                    // Set default step function for all animate calls
+                    step: (state, bar2) => {
+                    bar2.path.setAttribute('stroke', state.color);
+            var value = Math.round(bar2.value() * questionIntended);
+            if (value === 0) {
+                bar2.setText('');
+            } else {
+                bar2.setText(value);
+            }
+
+            bar2.text.style.color = state.color;
+        }
+        });
+            bar2.text.style.fontFamily = '"Abel", Helvetica, sans-serif';
+            bar2.text.style.fontSize = '2rem';
+
+            bar2.animate(questionScaled);  // Number from 0.0 to 1.0
+
+
+///////////////////////////////////////////////////////////
+//            Time Viz             //
+///////////////////////////////////////////////////////////
+
+            var bar3 = new ProgressBar.SemiCircle(timebar, {
+                    strokeWidth: 8,
+                    color: '#FFEA82',
+                    trailColor: '#eee',
+                    trailWidth: 8,
+                    easing: 'easeInOut',
+                    duration: 1400,
+                    svgStyle: null,
+                    text: {
+                        value: '1',
+                        alignToBottom: false
+                    },
+                    from: {color: '#ffb366'},
+                    to: {color: '#00e600'},
+                    // Set default step function for all animate calls
+                    step: (state, bar3) => {
+                    bar3.path.setAttribute('stroke', state.color);
+            var value = Math.round(bar3.value() * timeIntended);
+            if (value === 0) {
+                bar3.setText('');
+            } else {
+                bar3.setText(value);
+            }
+
+            bar3.text.style.color = state.color;
+        }
+        });
+            bar3.text.style.fontFamily = '"Abel", Helvetica, sans-serif';
+            bar3.text.style.fontSize = '2rem';
+
+            bar3.animate(timeScaled);  // Number from 0.0 to 1.0
+        };
+
+    </script>
+
+    <body>
+
+
+
+    <script>
+
+
+
+
+        function textgen(tryCount) {
+            console.log("textgen");
+
+            var vidActual = Number(responseDatas.totalVidWatched);
+            var vidIntended = Number(responseDatas.rVid);
+            var questionActual = Number(responseDatas.totalSubmits);
+            var questionIntended = Number(responseDatas.rQuiz);
+            var timeActual = responseDatas.totalTimeSite;
+            var secs    = timeActual;
+            var hours   = (secs / 60) / 60;
+            var hoursR  = Math.floor(hours);
+            var mins    = hours - hoursR;
+            var minsR   = Math.floor(mins * 60);
+
+            if (tryCount < 3 && (isNaN(hours) || isNaN(minsR))) {
+                console.log(timeActual);
+                console.log("retry total time get attempt: " + tryCount);
+                quantlog();
+                console.log(responseDatas);
+                textgen(tryCount+1);
+                return false
+            }
+
+            var timeR   = hoursR + " hours and" + " " + minsR + " minutes.";
+            window.replR   = hoursR + ":" + minsR;
+            timeActual = hours;
+            var timeIntended = Number(responseDatas.rTime);
+
+
+            document.getElementById("vidIntended").innerHTML= "You planned to watch " + Number(responseDatas.rVid) + " videos.";
+            document.getElementById("questionIntended").innerHTML= "You planned to answer " +  Number(responseDatas.rQuiz)  + " questions.";
+            document.getElementById("timeIntended").innerHTML= "You planned to spend " +   Number(responseDatas.rTime)   + " hours in the course and have spent" + " " + timeR;
+
+            if (vidActual >= vidIntended) {
+                $( "#vidIntended" ).text("Goal Completed! You planned for " + vidIntended + " " + "and have watched " + vidActual + " " + "videos!");
+            }
+
+            if (questionActual >= questionIntended) {
+                $( "#questionIntended" ).text("Goal Completed! You planned for " + questionIntended + " " + "and have answered " + questionActual + " " + "questions!");
+            }
+
+            if (timeActual >= timeIntended) {
+                $( "#timeIntended" ).text("Goal Completed! You planned for " + timeIntended + " " + "and have spent " + timeR);
+            }
+        }
+
+
+
+        function editButtonReset() {
+            $("#revealBtn").removeClass("emerald-flat-button");
+            $("#revealBtn").addClass("emerald-flat-button-small");
+        };
+
+    </script>
+    <br>
+    <p><input id="editGoals" type="submit" onclick="reveal();edited();editButtonReset();" value="Edit Goals" class="emerald-flat-button-small"></p>
+
+    </body>
+</div>
+<!-- ################################################################## -->
+<div id="replace">
+
+    <style>
+
+        .main {
+            width: 740px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            font-family: 'Abel', sans-serif !important;
+            font-size: 150%;
+            line-height: 200%;
+        }
+        #three {
+            display: flex;
+            justify-content: space-around;
+            font-family: 'Abel', sans-serif !important;
+        }
+        p.vid {
+            display: block;
+            width: 200px;
+            font-family: 'Abel', sans-serif !important;
+            text-align: center;
+            margin: 20px;
+        }
+        p.quiz {
+            display: block;
+            width: 200px;
+            text-align: center;
+            font-family: 'Abel', sans-serif !important;
+            margin: 20px;
+        }
+        p.time {
+            display: block;
+            font-family: 'Abel', sans-serif !important;
+            width: 200px;
+            text-align: center;
+            margin: 20px;
+        }
+        p.subm {
+            display: flex;
+            justify-content: center;
+        }
+        input.txtenter{
+            padding:5px;
+            font-family: 'Abel', sans-serif !important;
+            font-size: 100%;
+            line-height: 100%;
+            text-align: center;
+            padding: 0px;
+            border: none;
+            border-bottom: solid 3px #c9c9c9;
+        }
+        .emerald-flat-button {
+            position: relative !important;
+            display: block !important;
+            vertical-align: top !important;
+            width: 30% !important;
+            margin: auto;
+            height: 60px !important;
+            clear: both !important;
+            opacity: 1 !important;
+            font-family: 'Abel', sans-serif !important;
+            padding: 0 !important;
+            font-size: 25px !important;
+            color: white !important;
+            text-align: center !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+            background: #2ecc71 !important;
+            border: 0 !important;
+            border-bottom: 2px solid #28be68 !important;
+            cursor: pointer !important;
+            -webkit-box-shadow: inset 0 -2px #28be68 !important;
+            box-shadow: inset 0 -2px #28be68 !important;
+            transition: all 0.3s ease 0s !important;
+        }
+        .emerald-flat-button:hover {
+            opacity: 0.75 !important;
+        }
+        .emerald-flat-button:active {
+            top: 1px !important;
+            outline: none !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+        }
+        #header {
+            font-style: italic;
+            font-family: 'Abel';
+            font-weight: bold;
+            display: flex;
+            font-size: 240%;
+            margin-bottom: 0;
+        }
+    </style>
+
+
+    </head>
+    <body>
+    <main class="main">
+        <p id="header">THIS WEEK...</p>
+
+
+
+        <form id="qtPlan">
+            <div id="three">
+                <p class="vid">I plan to <i>watch</i>...<br>
+                    <br>
+                    <input class="txtenter" id="vids" type="text" name="pin" maxlength="4" size="2" input style="font-size:120%"> / <span id="vidzn"></span> <br>
+                    <br>
+                    Lecture Videos. </p>
+
+                <p class="quiz">I plan to <i>answer</i>...<br>
+                    <br>
+                    <input class="txtenter" id="quizs" type="text" name="pin" maxlength="4" size="2" input style="font-size:120%"> / <span id="quizdzn"></span> <br>
+                    <br>
+                    Quiz Questions. </p>
+
+                <p class="time">I plan to <i>devote</i>...<br>
+                    <br>
+                    <input class="txtenter" id="times" type="text" name="pin" maxlength="4" size="2" input style="font-size:120%"> / <span id="weekTime"></span> <br>
+                    <br>
+                    hours to the course. </p>
+
+            </div>
+            <p id="subConfirm">Response saved!</p>
+            <p id="subError"></p>
+            <p class="pHolder" style="visibility: hidden">Place</p>
+
+            <input type="submit" value="Submit" class="emerald-flat-button">
+            <br>
+            <p id="buts">
+                <input type="button" id="revealBtn" value="View Progress" class="emerald-flat-button-small">
+            </p>
+        </form>
+
+        <script type="text/javascript">
+            // The DOMContentLoaded is fired when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading. This means that all your initial DOM nodes have been parsed
+
+
+            function respSaved() {
+                $(".pHolder").css("display", "none");
+                $("#subConfirm").css({"visibility": "visible", "display": "block"});
+                setTimeout( function(){
+                    $("#subConfirm").fadeTo( "slow", 0 );
+                    $(".pHolder").css("display", "block");
+                    $("#subConfirm").css("display", "none");
+                    reveal();
+                    quantlog(zgLog,qgLog,vgLog);
+                }, 2000);
+                $("#subConfirm").css({"visibility": "invisible", "opacity": "1"});
+            }
+
+            function respError(text) {
+                $("#subError").text(text);
+                $(".pHolder").css("display", "none");
+                $("#subError").css({"visibility": "visible", "display": "block"});
+                setTimeout( function(){
+                    $("#subError").fadeTo( "slow", 0 );
+                    $(".pHolder").css("display", "block");
+                    $("#subError").css("display", "none");
+                }, 2000);
+                $("#subError").css({"visibility": "invisible", "opacity": "1"});
+                $("#bars").css("display", "none");
+                $("#editGoals").addClass("emerald-flat-button").removeClass("emerald-flat-button-small");
+            }
+        </script>
+
+    </main>
+    </body>
+
+    <script>
+
+        // Populate Dzn Fields
+
+        function populate() {
+            document.getElementById("vidzn").innerHTML=corrVid;
+            document.getElementById("quizdzn").innerHTML=corrQuiz;
+            document.getElementById("weekTime").innerHTML=TIME_PER_WEEK;
+        }
+
+
+
+    </script>
+
+
+
+</div>
+
+
+
+<script>
+
+
+
+
+    function edited() {
+        datas.edited = 1;
+        datas.time = new Date();
+        datas.index = datas.id + "_" + datas.time.getTime();
+    };
+
+    function reveal() {
+        $("#replace").toggle();
+        $("#startPlan").toggle();
+        //alert("Send datas to server!");
+        //console.log(datas);
+        quantget_data();
+    }
+
+    function quantlog(callback,arg1,arg2) {
+        console.log("log");
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events",
+            "method": "POST",
+            "data": {
+                "week": datas.week,
+                "id": datas.id,
+                "course": datas.course,
+                "vert": datas.vert,
+                "edited": datas.edited,
+                "vidID": datas.vidID,
+                "quID": datas.quID,
+                "uniqueSubmits": datas.uniqueSubmits,
+                "vidDuration": datas.vidDuration,
+                "timeSite": datas.timeSite,
+                "watched": datas.watched,
+                "time": datas.time,
+                "index": datas.index
+            }
+        };
+
+        $.ajax(settings).done(function (res) {
+            console.log(res);
+
+            var result = res.result[0];
+
+            responseDatas.week =  result._id.week;
+            responseDatas.id = result._id.id;
+            responseDatas.course = result._id.course;
+
+            responseDatas.totalEvents = result.totalEvents;
+            responseDatas.totalTimeSite = result.totalTimeSite;
+            responseDatas.totalVidDuration = result.totalVidDuration;
+            responseDatas.edited = result.edited;
+
+            if(callback != undefined) {
+                callback(arg1,arg2)
+            }
+        });
+    }
+
+    //QUANTITATIVE SPLANNING SUBMIT
+    function zLog(callback,arg1,arg2) {
+        console.log("zLog");
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/zLog",
+            "method": "POST",
+            "data": {
+                "week": datas.week,
+                "id": datas.id,
+                "course": datas.course,
+                "vert": datas.vert,
+                "edited": datas.edited,
+                "time": datas.time,
+                "vidGoal": datas.quantGoals.plannedVideos,
+                "quizGoal": datas.quantGoals.plannedQuiz,
+                "timeGoal": datas.quantGoals.plannedTimes,
+                "index": datas.index
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            var aggd = response[0];
+            //console.log(aggd);
+            var id = response[0]._id.id;
+            responseDatas.week = response[0]._id.week;
+            responseDatas.id = response[0]._id.id;
+            responseDatas.course = response[0]._id.course;
+            responseDatas.lastQuizGoalSet = "Last Quiz Goal" + response[0].lastQuizGoalSet;
+            //$(".lastQuizGoalSet").text(responseDatas.lastQuizGoalSet);
+            responseDatas.lastTimeGoalSet = "Last Time Goal" + response[0].lastTimeGoalSet;
+            //$(".lastTimeGoalSet").text(responseDatas.lastTimeGoalSet);
+            responseDatas.lastVidGoalSet = "Last Vid Goal" + response[0].lastVidGoalSet;
+            //$(".lastVidGoalSet").text(responseDatas.lastVidGoalSet);
+            responseDatas.edited = response[0].edited;
+
+            if(callback != undefined) {
+                callback(arg1,arg2)
+            }
+
+        });
+    }
+
+    //QUANTITATIVE REQUEST
+    function zgLog(callback,arg1) {
+        console.log("zgLog");
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/zLog",
+            "method": "GET",
+            "data": {
+                "week": datas.week,
+                "id": datas.id,
+                "course": datas.course,
+                "vert": datas.vert,
+                "edited": datas.edited,
+                "time": datas.time,
+                "index": datas.index
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            var aggd = response[0];
+            //console.log(aggd);
+            if(aggd.vidGoal != undefined) {
+                responseDatas.rVid = aggd.vidGoal;
+                responseDatas.rQuiz = aggd.quizGoal;
+                responseDatas.rTime = aggd.timeGoal;
+
+                if (aggd.vidGoal >= 1 && aggd.quizGoal >= 1 && aggd.timeGoal >= 1) {
+                    vgLog();
+                    $("#bars").css("display", "block");
+                    $(".noPlan").css("display", "none");
+                    $("#editGoals").removeClass("emerald-flat-button").addClass("emerald-flat-button-small");
+                }
+                else {
+                    $("#bars").css("display", "none");
+                    $("#editGoals").addClass("emerald-flat-button").removeClass("emerald-flat-button-small");
+                    $(".noPlan").text("You haven't set goals yet this week. Click the 'Edit Goals' button below to get started!");
+                }
+
+                if (callback != undefined) {
+                    callback(arg1)
+                }
+            }
+        });
+    }
+
+
+    //Video REQUEST
+    function vgLog(callback) {
+        console.log("vgLog");
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/vLog",
+            "method": "GET",
+            "data": {
+                "week": datas.week,
+                "id": datas.id,
+                "course": datas.course,
+                "vert": datas.vert,
+                "edited": datas.edited,
+                "time": datas.time,
+                "index": datas.index
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            var aggd = response;
+            //console.log(aggd);
+            responseDatas.totalVidWatched = aggd;
+            barGen();
+        });
+    }
+
+
+
+    function qgLog(callback) {
+        console.log("qgLog");
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/quLog",
+            "method": "GET",
+            "data": {
+                "week": datas.week,
+                "id": datas.id,
+                "course": datas.course,
+                "vert": datas.vert,
+                "edited": datas.edited,
+                "time": datas.time,
+                "index": datas.index
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            var aggd = response;
+            responseDatas.totalSubmits = aggd;
+            if(callback != undefined) {
+                callback()
+            }
+        });
+    }
+
+
+</script>
+
+<script>
+    //function takes a string to be sent via xhr and turns it back into an object to make it easier
+    //to read on the console
+    function splitParamString(input) {
+        if(input == null){
+            return {};
+        }
+        var params = input.split("&");
+        var paramObject = {};
+        params.forEach(function(element) {
+            var keyValue = element.split("=");
+            paramObject[keyValue[0]]=keyValue[1];
+        });
+        return paramObject;
+    }
+
+    //Goal: log all data that is sent in xhr post requests to console before they are sent
+    //Code snippet inspired by: http://stackoverflow.com/questions/25335648/how-to-intercept-all-ajax-requests-made-by-different-js-libraries
+    var vidlog;
+    var plays = [];
+    var pauses = [];
+    var durVid;
+    var vidSum = [];
+    var url = document.URL;
+
+    // This will break studio if it runs inside of it, so this IF statement make it so the XHR intercept only fires if not in studio
+    if (url.includes('studio') === false) {
+        var origSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function(data) {
+
+            vidlog = splitParamString(data);
+            vidlog.time = new Date();
+
+            var listening = true;
+
+            if (listening && vidlog.event_type === "play_video") {
+                listening = false;
+                setTimeout(function () {
+                    listening = true
+                }, 2000);
+                plays.push(vidlog.time);
+                addUp();
+                //console.log('%c TimeSite: %d', 'background: green; color: white; display: block;', timeSite);
+            } else if (listening && vidlog.event_type === "pause_video") {
+                listening = false;
+                setTimeout(function () {
+                    listening = true
+                }, 2000);
+                pauses.push(vidlog.time);
+                addUp();
+            } else if (vidlog.event_type === "problem_check") {
+                userData.quID = vidlog.event.split("_")[1];
+                //console.log("problem" + datas.quID + " caught");
+                Quallog();
+                Qualget_data();
+            }
+            origSend.call(this,data);
+        };
+    } else {
+        if (dev) {
+            console.log("You're in studio.")
+        }
+    }
+
+
+    // Takes the Pauses and Plays arrays and finds total duration between play and pause events
+    function addUp() {
+        for (var i=0; i<= pauses.length-1; i++) {
+            vidSum[i] = pauses[i] - plays[i];
+        }
+        durVid = vidSum.reduce(add, 0) / 1000;
+        console.log(durVid);
+        if (durVid >= 30 ) {
+            datas.vidID = vidlog.event.split("%")[5];
+            quantlog();
+            quantget_data();
+            console.log(datas);
+        } else if (durVid < 30) {
+            console.log("not finished yet");
+        }
+    }
+
+
+    // Returns the Sum of an Array
+    function add(a, b) {
+        return a + b;
+    }
+
+    function quantSetup() {
+        //////////////////////////////////////////////
+        //          Logging User Time Spent        //
+        //////////////////////////////////////////////
+
+
+
+        //////////////////////////////////////////////
+        //////////////////////////////////////////////
+
+        // handle form submission
+        var myForm = document.getElementById('qtPlan');
+        myForm.addEventListener('submit', function(e){
+            e.preventDefault();
+            var quantGoals = {};
+            quantGoals.plannedVideos = Number($( "#vids").val());
+            quantGoals.plannedQuiz= Number($( "#quizs").val());
+            quantGoals.plannedTimes = Number($( "#times").val());
+            datas.quantGoals = quantGoals;
+            //check for positive
+            if (quantGoals.plannedVideos >= 0 && quantGoals.plannedQuiz >= 0 &&  quantGoals.plannedTimes >= 0) {
+                if (quantGoals.plannedVideos % 1 == 0 && quantGoals.plannedQuiz % 1 == 0 && quantGoals.plannedTimes % 1 == 0) {
+                    if (quantGoals.plannedVideos <= corrVid && quantGoals.plannedQuiz <= corrQuiz ) {
+                        zLog();
+                        respSaved();
+                        quantget_data();
+                    } else {
+                        respError("Invalid Response: Video and quiz activity cannot be bigger than total");
+                    }
+                } else {
+                    respError("Invalid Response: Must be a whole number");
+                }
+            } else {
+                respError("Invalid Response: Please enter numbers only.");
+            }
+        });
+
+
+        // handle reveal btn
+        var revealBtn = document.getElementById('revealBtn');
+        revealBtn.addEventListener('click', function(e){
+            reveal();
+            quantlog(zgLog,qgLog,vgLog);
+        });
+
+        mapping();
+        populate();
+    }
+
+
+</script>
+
