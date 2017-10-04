@@ -1,0 +1,724 @@
+
+<!-- Styles for the quality applet -->
+<link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+<style type="text/css">
+
+    .main {
+        width: 740px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        font-family: 'Abel', sans-serif;
+        font-size: 150%;
+        line-height: 200%;
+    }
+
+    p.left {
+        width: 70px;
+        float: left;
+        font-size: 500%;
+        font-family: Times;
+        opacity: 0.5;
+        margin-bottom: 0;
+    }
+
+    p.midd {
+        width: 500px;
+        float: left;
+        margin-bottom: 0;
+    }
+
+    p.attr {
+        width: 400px;
+        float: left;
+        text-align: right;
+    }
+
+    p.rite {
+        width: 70px;
+        float: left;
+        text-align: right;
+        font-size: 500%;
+        font-family: Times;
+        opacity: 0.5;
+        margin-bottom: 0;
+    }
+
+    p.subm {
+        margin: auto;
+        clear: both;
+        text-align: center;
+    }
+
+    input.txtenter{
+        font-family: 'Open Sans', sans-serif;
+        font-size: 100%;
+        line-height: 100%;
+        padding: 0;
+        border: none;
+        border-bottom: solid 2px #c9c9c9;
+    }
+
+    #header {
+        font-style: italic;
+        font-weight: bold;
+        font-family: 'Abel', sans-serif;
+        display: flex;
+        font-size: 240%;
+        margin-bottom: 0;
+    }
+
+    #quote {
+        font-size: 240%;
+        margin-bottom: 0;
+    }
+
+    .midd {
+        font-family: 'Abel', sans-serif !important;
+        font-size: 180%;
+        margin-bottom: 0;
+    }
+
+    .attr {
+        font-family: 'Abel', sans-serif !important;
+        font-size: 180%
+    }
+
+
+    .emerald-flat-button-small {
+        position: relative !important;
+        display: block !important;
+        vertical-align: top !important;
+        width: 15% !important;
+        clear: both;
+        height: 30px !important;
+        opacity: 1 !important;
+        font-family: 'Abel', sans-serif !important;
+        padding: 0 !important;
+        font-size: 15px !important;
+        color: white !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+        background: #2ecc71 !important;
+        border: 0 !important;
+        border-bottom: 2px solid #28be68 !important;
+        cursor: pointer !important;
+        -webkit-box-shadow: inset 0 -2px #28be68 !important;
+        box-shadow: inset 0 -2px #28be68 !important;
+        transition: all 0.3s ease 0s !important;
+    }
+
+    .emerald-flat-button-small:hover {
+        opacity: 0.75 !important;
+    }
+
+    .emerald-flat-button-small:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .ajaxLanding {
+        display: none;
+    }
+
+    #replace {
+        display: none;
+    }
+
+    #startPlan {
+        display: block;
+    }
+
+    .main {
+        width: 740px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        font-family: 'Abel', sans-serif;
+        font-size: 150%;
+        line-height: 200%;
+    }
+
+    .style-2 input[type="text"] {
+        padding: 10px;
+        border: solid 5px #c9c9c9;
+        transition: border 0.3s;
+        width: 520px;
+        height: 200px;
+
+    }
+
+    .style-2 input[type="text"]:focus,
+    .style-2 input[type="text"].focus {
+        border: solid 5px #969696;
+    }
+
+    #three {
+        display: flex;
+        justify-content: center;
+    }
+
+    h2 {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    input {
+        padding: 12px 20px;
+        margin: 8px 0;
+        vertical-align: text-top;
+        color: black;
+        font-size: 15px;
+        font-family: 'Abel', sans-serif;
+        vertical-align: top;
+        text-align:top;
+    }
+
+    #header {
+        font-style: italic;
+        font-weight: bold;
+        font-family: 'Abel';
+        display: flex;
+        font-size: 240%;
+        margin-bottom: 0;
+    }
+
+    p.header1 {
+        display: flex;
+        justify-content: left;
+        size: 40px;
+    }
+
+    textarea#QualTextArea {
+        width: 620px;
+        height: 200px;
+        border: 5px solid #cccccc;
+        padding: 5px;
+        font-family: 'Abel', sans-serif;
+        background-image: url(bg.gif);
+        background-position: bottom right;
+        background-repeat: no-repeat;
+        font-size: 25px;
+        line-height: 150%;
+    }
+
+    p.subm {
+        display: flex;
+        justify-content: center;
+    }
+
+    #buts {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #checked {
+        font-size: 25px;
+        font-family: 'Abel', sans-serif !important;
+    }
+
+    .emerald-flat-button {
+        position: relative !important;
+        display: block !important;
+        vertical-align: top !important;
+        width: 30% !important;
+        height: 60px !important;
+        clear: both !important;
+        opacity: 1 !important;
+        font-family: 'Abel', sans-serif !important;
+        padding: 0 !important;
+        font-size: 25px !important;
+        color: white !important;
+        text-align: center !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+        background: #2ecc71 !important;
+        border: 0 !important;
+        border-bottom: 2px solid #28be68 !important;
+        cursor: pointer !important;
+        -webkit-box-shadow: inset 0 -2px #28be68 !important;
+        box-shadow: inset 0 -2px #28be68 !important;
+        transition: all 0.3s ease 0s !important;
+    }
+
+    .emerald-flat-button:hover {
+        opacity: 0.75 !important;
+    }
+
+    .emerald-flat-button:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+</style>
+
+<!-- Code for the quality applet -->
+<script type="text/javascript">
+
+
+    //////////////////////////////////////////////
+    //               Global vars                //
+    //////////////////////////////////////////////
+
+    //User data
+    var origin;
+    var userid;
+    var course;
+    var userData = {};
+    responseDatas = {};
+
+    //Runtime data
+    var dev = false;
+    var WRONG_USER = "This modal is inactive.";
+    var SERVER_URL = "https://lambda-rp.ewi.tudelft.nl:8080";
+
+    //////////////////////////////////////////////
+    //////////////////////////////////////////////
+
+
+
+    //////////////////////////////////////////////
+    //             Logging User Data            //
+    //////////////////////////////////////////////
+
+    // Get the initial user data from edX
+    function Qualget_data() {
+        userData = {};
+        userData.edited = 0;
+        var username = analytics._user._getTraits().username;
+        var url = window.location.href;
+        var split = url.split("/");
+        var chap = split[6];
+        var seq = split[7];
+        var block = $('#sequence-list .nav-item.active').data('id');
+        var vertical = block.split("@").pop();
+        var origin = chap+"/"+seq+"/"+vertical;
+
+        course = split[4].split(":")[1];
+        userid = analytics.user()._getId();
+
+        userData.userName = username;
+        userData.id = userid;
+        userData.course = course;
+        userData.time = new Date();
+        userData.index = userData.id + "_" + userData.time.getTime();
+        userData.vert = vertical;
+        userData.week = chap;
+
+        $('#dx-username').text(username);
+
+        if(dev) {
+            console.log("user: " + userid);
+            console.log("course: " + course);
+            console.log("origin: " + origin);
+            console.log("week: " + chap);
+
+        }
+
+        var mobile = false;
+        if( navigator.userAgent.match(/Android/i)
+            || navigator.userAgent.match(/webOS/i)
+            || navigator.userAgent.match(/iPhone/i)
+            || navigator.userAgent.match(/iPad/i)
+            || navigator.userAgent.match(/iPod/i)
+            || navigator.userAgent.match(/BlackBerry/i)
+            || navigator.userAgent.match(/Windows Phone/i)
+            || (window.innerWidth <= 800 && window.innerHeight <= 600)
+        ) {
+            mobile = true;
+        }
+
+
+        if (mobile || ((userid % 4 == 0 || userid % 4 == 2) && userid != 14917292)) {
+            $("#qualityContent").empty().text(WRONG_USER)
+        }
+    }
+
+    // Mark that data is edited
+    function edited() {
+        userData.edited = 1;
+        userData.time = new Date();
+        userData.index = userData.id + "_" + userData.time.getTime();
+        Quallog();
+        console.log(userData);
+        Qualget_data();
+    }
+
+    // GENERAL LOGGING
+    function Quallog(callback) {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events",
+            "method": "POST",
+            "data": {
+                "week": userData.week,
+                "id": userData.id,
+                "course": userData.course,
+                "vert": userData.vert,
+                "edited": userData.edited,
+                "vidId": userData.vidID,
+                "uniqueSubmits": userData.uniqueSubmits,
+                "vidDuration": userData.vidDuration,
+                "timeSite": userData.timeSite,
+                "watched": userData.watched,
+                "time": userData.time,
+                "index": userData.index
+            }
+        };
+
+        $.ajax(settings).done(function (res) {
+            console.log(res);
+
+            var result = res.result[0];
+
+            responseDatas.week =  result._id.week;
+            responseDatas.id = result._id.id;
+            responseDatas.course = result._id.course;
+
+            responseDatas.totalEvents = result.totalEvents;
+            responseDatas.totalTimeSite = result.totalTimeSite;
+            responseDatas.totalVidDuration = result.totalVidDuration;
+            responseDatas.edited = result.edited;
+
+            if(callback != undefined) {
+                callback(arg1,arg2)
+            }
+        });
+    }
+
+    //////////////////////////////////////////////
+    //////////////////////////////////////////////
+
+
+
+
+    // ***************************************************************
+    // ACTIVITY DATA KEYS
+
+    // TIME: datas.time
+    // Videos: datas.watched
+    // Quiz: datas.uniqueSubmits
+    // ***************************************************************
+
+
+
+    //////////////////////////////////////////////
+    //          Logging User Video Activity       //
+    //////////////////////////////////////////////
+
+
+    //this function is called by the API
+    window.onload = function initDansListeners() {
+        Qualget_data();
+        userData.quantGoals = {};
+        Quallog();
+        pgLog();
+    };
+
+
+
+
+    //////////////////////////////////////////////
+    //////////////////////////////////////////////
+
+
+
+    // The DOMContentLoaded is fired when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading. This means that all your initial DOM nodes have been parsed
+
+
+
+    // handle reveal btn
+    var revealBtn = document.getElementById('revealBtn');
+    console.log("buttclick3");
+    revealBtn.addEventListener('click', function(e){
+        reveal();
+    });
+
+
+
+    // handle form submission
+    var myForm = document.getElementById('qlPlan');
+    myForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        userData.quantGoals = {};
+        var textArea = $( "#QualTextArea" ).text();
+        x = $( "#QualTextArea" ).val() == "Enter your story here...";
+        if (x.toString() == "false") {
+            var textArea = $( "#QualTextArea" ).text();
+            userData.id = userid;
+            userData.course = course;
+            userData.qualPlan = $( "#QualTextArea" ).val();
+            document.getElementById("planningText").innerHTML = userData.qualPlan;
+            userData.time = new Date();
+            userData.index = userData.id + "_" + userData.time.getTime();
+        } else {
+            userData.id = userid;
+            userData.course = course;
+            userData.time = new Date();
+            userData.index = userData.id + "_" + userData.time.getTime();
+            userData.qualPlan = "No plan yet";
+        }
+        pLog();
+        Qualget_data();
+        respSaved();
+    });
+
+
+    function respSaved() {
+        console.log("saved?");
+        var origTxt = $( "textarea" ).text();
+        $( "textarea" ).val("Response saved!");
+        setTimeout( function() {
+            $( "textarea" ).val(origTxt);
+        }, 3000);
+    }
+
+    function reveal() {
+        $("#replace").toggle();
+        $("#startPlan").toggle();
+        Quallog();
+        Qualget_data();
+    }
+
+    $(".sequence-nav").unbind('click').click(function () {
+        Qualget_data();
+        userData.quantGoals = {};
+        Quallog();
+        zgLog();
+        qgLog();
+        vgLog();
+        pgLog();
+    });
+
+    // QUALITATIVE PLANNING SUBMIT
+    function pLog() {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/pLog",
+            "method": "POST",
+            "data": {
+                "week": userData.week,
+                "id": userData.id,
+                "course": userData.course,
+                "vert": userData.vert,
+                "edited": userData.edited,
+                "qualPlan": userData.qualPlan,
+                "time": userData.time,
+                "index": userData.index
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            var aggd = response[0];
+            console.log(aggd);
+            var lastQualGoalSet = response[0].lastQualGoalSet;
+        });
+    }
+
+
+    function pgLog() {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/pLog",
+            "method": "GET",
+            "data": {
+                "week": userData.week,
+                "id": userData.id,
+                "course": userData.course,
+                "vert": userData.vert,
+                "edited": userData.edited,
+                "time": userData.time,
+                "index": userData.index
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            var aggd = response[0];
+            console.log(aggd);
+            var lastQualGoalSet = response[0].qualPlan;
+            $("#planningText").text(lastQualGoalSet);
+            $(".lastQualGoalSet").text(lastQualGoalSet);
+        });
+    }
+
+
+    //QUANTITATIVE SPLANNING SUBMIT
+    function zLog(callback) {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": SERVER_URL + "/api/events/zLog",
+            "method": "POST",
+            "data": {
+                "week": userData.week,
+                "id": userData.id,
+                "course": userData.course,
+                "vert": userData.vert,
+                "edited": userData.edited,
+                "time": userData.time,
+                "vidGoal": userData.quantGoals.plannedVideos,
+                "quizGoal": userData.quantGoals.plannedQuiz,
+                "timeGoal": userData.quantGoals.plannedTimes,
+                "index": userData.index
+            }
+        };
+
+        var aggd = response[0];
+        //console.log(aggd);
+        var id = response[0]._id.id;
+        responseDatas.week = response[0]._id.week;
+        responseDatas.id = response[0]._id.id;
+        responseDatas.course = response[0]._id.course;
+        responseDatas.lastQuizGoalSet = "Last Quiz Goal" + response[0].lastQuizGoalSet;
+        //$(".lastQuizGoalSet").text(responseDatas.lastQuizGoalSet);
+        responseDatas.lastTimeGoalSet = "Last Time Goal" + response[0].lastTimeGoalSet;
+        //$(".lastTimeGoalSet").text(responseDatas.lastTimeGoalSet);
+        responseDatas.lastVidGoalSet = "Last Vid Goal" + response[0].lastVidGoalSet;
+        //$(".lastVidGoalSet").text(responseDatas.lastVidGoalSet);
+        responseDatas.edited = response[0].edited;
+
+        if(callback != undefined) {
+            callback(arg1,arg2)
+        }
+    }
+
+
+    //function takes a string to be sent via xhr and turns it back into an object to make it easier
+    //to read on the console
+    function splitParamString(input) {
+        if(input == null || input == undefined){
+            return {};
+        }
+        //Split all parameters
+        var params = input.split("&");
+        var paramObject = {};
+        params.forEach(function(element) {
+            //Split the key value pair
+            var keyValue = element.split("=");
+            paramObject[keyValue[0]]=keyValue[1];
+        });
+        return paramObject;
+    }
+
+    //Goal: log all data that is send in xhr post requests to console before they are sent
+    //Code snippet inspired by: http://stackoverflow.com/questions/25335648/how-to-intercept-all-ajax-requests-made-by-different-js-libraries
+    var vidlog;
+    var plays = [];
+    var pauses = [];
+    var durVid;
+    var vidSum = [];
+    var url = document.URL;
+
+    // This will break studio if it runs inside of it, so this IF statement make it so the XHR intercept only fires if not in studio
+    if (url.includes('studio') === false) {
+        var origSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function(data) {
+
+            vidlog = splitParamString(data);
+            vidlog.time = new Date();
+
+            var listening = true;
+
+            if (listening && vidlog.event_type === "play_video") {
+                listening = false;
+                setTimeout(function () {
+                   listening = true
+                }, 2000);
+                plays.push(vidlog.time);
+                addUp();
+                //console.log('%c TimeSite: %d', 'background: green; color: white; display: block;', timeSite);
+            } else if (listening && vidlog.event_type === "pause_video") {
+                listening = false;
+                setTimeout(function () {
+                   listening = true
+                }, 2000);
+                pauses.push(vidlog.time);
+                addUp();
+            } else if (vidlog.event_type === "problem_check") {
+                userData.quID = vidlog.event.split("_")[1];
+                //console.log("problem" + datas.quID + " caught");
+                Quallog();
+                Qualget_data();
+            }
+            origSend.call(this,data);
+        };
+    } else {
+        if (dev) {
+            console.log("You're in studio.")
+        }
+    }
+
+
+    // Takes the Pauses and Plays arrays and finds total duration between play and pause events
+    function addUp() {
+
+        for (i=0; i<= pauses.length-1; i++) {
+            vidSum[i] = pauses[i] - plays[i];
+        }
+
+        durVid = vidSum.reduce(add, 0) / 1000;
+        console.log(durVid);
+
+        if (durVid >= 30 ) {
+            userData.vidID = vidlog.event.split("%")[5];
+            Quallog();
+            Qualget_data();
+            console.log(userData);
+        } else if (durVid < 30) {
+            console.log("not finished yet");
+        }
+    }
+
+
+    // Returns the Sum of two elements
+    function add(a, b) {
+        return a + b;
+    }
+
+
+</script>
+
+<!-- HTML Content for the quality applet -->
+<div id="qualityContent">
+
+    <!-- Input Part -->
+    <div id="startPlan">
+        <main class="main">
+            <p id="header">WHAT DRIVES YOU:</p>
+            <p class="left" id="quote">&ldquo;</p>
+            <p class="midd lastQualGoalSet" id="planningText">You haven't set a goal yet. Click "Edit" below to create one.</p>
+            <p class="rite" id="quote-close">&rdquo;</p>
+            <p class="left"></p>
+            <p class="attr"> - <span id="dx-username"></span></p>
+            <br><br>
+            <p><input type="submit" onclick="reveal();edited();" value="Edit" class="emerald-flat-button-small"><p>
+
+            <footer></footer>
+        </main>
+    </div>
+
+    <!-- Feedback part -->
+    <div id="replace">
+        <p id="header">WHAT DRIVES YOU?</p>
+        <p class="header1">What brought you here? What do you hope to gain from this course?</p>
+
+        <form id="qlPlan">
+            <div id="three">
+                <textarea form="replace" name="styled-textarea" id="QualTextArea" onfocus="this.value='';">Enter your motivation here...</textarea>
+            </div>
+            <br>
+            <p id="buts">
+                <input type="button" value="Check Existing Plan" id="revealBtn" class="emerald-flat-button">
+                <input type="submit" value="Submit" class="emerald-flat-button">
+            </p>
+        </form>
+    </div>
+
+
+</div>
+
