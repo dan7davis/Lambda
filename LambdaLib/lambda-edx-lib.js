@@ -6,31 +6,48 @@
      */
     'use strict';
     function library_init() {
+        //The object to return
         var Lib = {};
+
+        //Private variable
         var version = "1.0-alpha";
         var serverURL = undefined;
-        var userData = undefined;
+
+        var userData = {};
+        var pageData = {};
 
         var loadTime = new Date();
         var logCallback;
         var showMessages = true;
 
+        //Methods
         /**
-         * set a new loadTime.
+         * Sets a new loadTime.
          */
         Lib.refreshLoadTime = function () {
             loadTime = new Date();
         };
 
+
         /**
-         * suppresses irrelevant warnings.
+         * Logs all the page info to the console.
+         */
+        Lib.showPageData = function() {
+          console.log("Week Id (sectionId): " + pageData.sectionId);
+          console.log("Sub section Id(seq): " + pageData.seq);
+          console.log("Unit Id (vert): " + pageData.vert);
+          console.log("Course Id (courseId): " + pageData.courseId);
+        };
+
+        /**
+         * Suppresses irrelevant warnings.
          */
         Lib.suppressMessages = function () {
           showMessages = false;
         };
 
         /**
-         * get library version.
+         * Get library version.
          * @returns {string} version of library
          */
         Lib.getVersion = function () {
@@ -67,19 +84,34 @@
                 throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
             }
 
+            if (typeof(analytics) !== 'undefined') {
+                userData.userName = analytics._user._getTraits().username;
+                userData.userId = analytics.user()._getId();
+            } else {
+                console.error("analytics was not found. Is the page fully loaded yet?")
+            }
+
+        };
+
+        /**
+         * Gets the page information from the edx platform.
+         */
+        Lib.loadPageData = function () {
+            if (!Lib.isEdx()) {
+                console.error("To gather page data this must be called on the Edx page!");
+                throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+            }
+
             var url = window.location.href;
             var split = url.split("/");
             var block = $('#sequence-list .nav-item.active').data('id');
 
-            userData = {};
-            userData.userName = analytics._user._getTraits().username;
-            userData.userId = analytics.user()._getId();
+            pageData.sectionId = split[6];
+            pageData.seq = split[7];
+            pageData.vert = block.split("@").pop();
+            pageData.courseId = split[4].split(":")[1].split("+")[1];
+            pageData.origin = userData.sectionId+"/"+userData.seq+"/"+userData.vert;
 
-            userData.sectionId = split[6];
-            userData.seq = split[7];
-            userData.vert = block.split("@").pop();
-            userData.courseId = split[4].split(":")[1].split("+")[1];
-            userData.origin = userData.sectionId+"/"+userData.seq+"/"+userData.vert;
         };
 
         /**
@@ -139,30 +171,8 @@
 
         };
 
+        Lib.trackUser = function () {
 
-        /**
-         * Places a function of the EdX page navigation.
-         * If no function is given it will use the logUserActivity function.
-         * @param customFunction If you want som other function than logUserActivity
-         * @param arg1 optional argument for callback
-         * @param arg2 optional argument for callback
-         */
-        Lib.watchNavigation = function (customFunction) {
-            if (Lib.isEdx()) {
-                //load function
-                var func;
-                if (typeof(customFunction) === 'undefined'){
-                    func = Lib.logUserActivity;
-                } else {
-                    func = customFunction
-                }
-
-                //Top bar
-                $(".sequence-nav").preBind('click',func);
-
-                //Footer bar
-                $(".sequence-bottom").preBind('click',func);
-            }
         };
 
         //Returns the instance
@@ -171,40 +181,23 @@
 
 
     /**
-     * adds the library to the page.
+     * Adds the library to the page.
      */
     if (typeof(jQuery) === 'undefined') {
         console.error("Jquery is required for LambdaLib");
     } else {
         if (typeof(LambdaLib) === 'undefined') {
             window.LambdaLib = library_init();
+            window.LambdaLib.loadPageData();
         } else {
             console.log("LambdaLib already defined");
             if (typeof(LambdaLib.refreshLoadTime) !== 'undefined') {
                 LambdaLib.refreshLoadTime();
+                LambdaLib.loadPageData();
                 console.log("Refreshed loadTime");
             }
         }
     }
 
-    $.fn.preBind = function(type, data, fn) {
-        this.bind(type, data, fn);
-
-        var currentBindings = this.data('events')[type];
-        var currentBindingsLastIndex = currentBindings.length - 1;
-
-        var newBindings = [];
-
-        newBindings.push(currentBindings[currentBindingsLastIndex]);
-
-        $.each(currentBindings, function (index) {
-            if (index < currentBindingsLastIndex)
-                newBindings.push(this);
-        });
-
-        this.data('events')[type] = newBindings;
-
-        return this;
-    };
 
 })(window);
