@@ -30,7 +30,6 @@
             loadTime = new Date();
         };
 
-
         /**
          * Logs all the page info to the console.
          */
@@ -65,6 +64,10 @@
         };
 
 
+        /**
+         * get the user data
+         * @returns {Object} userData object
+         */
         Lib.getUserData = function () {
             return userData
         };
@@ -215,6 +218,11 @@
 
         };
 
+        /**
+         * The default logging function for problem activity.
+         * If a callback is set this will be used.
+         * @param args optional argument for callback
+         */
         Lib.logProblemActivity = function (args) {
             if (!Lib.logCheck()) {
                 return false;
@@ -227,7 +235,38 @@
                 "method": "POST",
                 "data": {
                     "user": userData.userId,
+                    "section": userData.sectionId,
                     "problemId": problemId
+                }
+            };
+            if(typeof(userLogCallback) === 'undefined') {
+                $.ajax(settings)
+            } else {
+                $.ajax(settings).done(function (response) {
+                    problemLogCallback(args)
+                });
+            }
+        };
+
+        /**
+         * The default logging function for video activity.
+         * If a callback is set this will be used.
+         * @param args optional argument for callback
+         */
+        Lib.logVideoActivity = function () {
+            if (!Lib.logCheck()) {
+                return false;
+            }
+
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": serverURL + "/edx/logVideoActivity",
+                "method": "POST",
+                "data": {
+                    "user": userData.userId,
+                    "section": userData.sectionId,
+                    "videoId": videoId
                 }
             };
             if(typeof(userLogCallback) === 'undefined') {
@@ -338,6 +377,63 @@
                     console.error("Logger is not defined");
                 }
             }
+        };
+
+        /**
+         * Sets up the video tracking in a page.
+         * @param {Boolean} replace true if the customFunction replaces the default function.
+         * @param {Function} customFunction The custom function for the tracker
+         * @param {object } arg Arguments for the function
+         * @returns {boolean} returns false if there was an error
+         */
+        Lib.trackVideo = function (replace,customFunction,arg) {
+            //Only works on edx page
+            if (!Lib.isEdx()){
+                if(showMessages){
+                    console.error("To gather page data this must be called on the Edx page!");
+                    throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+                }
+                return false;
+            }
+
+            let videoLogs = {};
+
+            // eventType, data, element are elements form the Logger callback
+            let playFunc = function (eventType, data, element) {
+                console.log(data);
+                videoLogs[data.id] = data.currentTime;
+            };
+
+            //Build the default function
+            // eventType, data, element are elements form the Logger callback
+            let pauseFunc = function (eventType, data, element) {
+                if (replace === false) {
+                    //TODO create default tracker function
+                    console.log(data);
+                    if (videoLogs[data.id]) {
+                        console.log("time watched: " + (data.currentTime - videoLogs[data.id]));
+                        delete videoLogs[data.id];
+                        console.log(videoLogs);
+                    }
+                }
+
+                //Add custom function if needed
+                if (typeof(customFunction) === "function") {
+                    customFunction(arg,eventType, data, element);
+                }
+            };
+
+            //Check for logger
+            if (typeof(window.Logger.listen) === "function") {
+                //Build all loggers
+                Logger.listen("play_video",null, playFunc);
+                Logger.listen("pause_video", null, pauseFunc);
+            } else {
+                if (showMessages) {
+                    console.error("Logger is not defined");
+                }
+            }
+
         };
 
         //Returns the instance
