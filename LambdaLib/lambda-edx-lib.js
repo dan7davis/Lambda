@@ -7,18 +7,20 @@
     'use strict';
     function library_init() {
         //The object to return
-        var Lib = {};
+        let Lib = {};
 
         //Private variable
-        var version = "1.0-alpha";
-        var serverURL = undefined;
+        const version = "1.0-alpha";
+        let serverURL = undefined;
 
-        var userData = {};
-        var pageData = {};
+        let userData = {};
+        let pageData = {};
 
-        var loadTime = new Date();
-        var logCallback;
-        var showMessages = true;
+        let loadTime = new Date();
+        let userLogCallback;
+        let problemLogCallback;
+        let videoLogCallback;
+        let showMessages = true;
 
         //Methods
         /**
@@ -75,20 +77,57 @@
         };
 
         /**
+         * Check if everything is set that is needed for aan Ajax request
+         * @throws TypeError if serverURL or userData is missing
+         * @returns {boolean}
+         */
+        Lib.logCheck = function () {
+            let error = false;
+            //Check if there is a server url
+            if (typeof(serverURL) === 'undefined' ){
+                if(showMessages) {
+                    console.error("serverURL is not present! Dit you run setServer?");
+                }
+                error = true;
+            }
+            //check if userData is present
+            if (typeof(userData) === 'undefined') {
+                if(showMessages) {
+                    console.error("userData is not present! Dit you run loadUserData?");
+                }
+                error = true;
+            }
+
+            if (error) {
+                if(showMessages) {
+                    throw new TypeError("undefined variable(s)");
+                }
+                return false;
+            } else {
+                return true;
+            }
+        };
+
+        /**
          * Gets the users info from the edx platform.
          */
         Lib.loadUserData = function () {
 
-            if (!Lib.isEdx()) {
-                console.error("To gather user data this must be called on the Edx page!");
-                throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+            if (!Lib.isEdx()){
+                if(showMessages){
+                    console.error("To gather page data this must be called on the Edx page!");
+                    throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+                }
+                return false;
             }
 
             if (typeof(analytics) !== 'undefined') {
                 userData.userName = analytics._user._getTraits().username;
                 userData.userId = analytics.user()._getId();
             } else {
-                console.error("analytics was not found. Is the page fully loaded yet?")
+                if(showMessages) {
+                    console.error("analytics was not found. Is the page fully loaded yet?")
+                }
             }
 
         };
@@ -97,14 +136,17 @@
          * Gets the page information from the edx platform.
          */
         Lib.loadPageData = function () {
-            if (!Lib.isEdx()) {
-                console.error("To gather page data this must be called on the Edx page!");
-                throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+            if (!Lib.isEdx()){
+                if(showMessages){
+                    console.error("To gather page data this must be called on the Edx page!");
+                    throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+                }
+                return false;
             }
 
-            var url = window.location.href;
-            var split = url.split("/");
-            var block = $('#sequence-list .nav-item.active').data('id');
+            let url = window.location.href;
+            let split = url.split("/");
+            let block = $('#sequence-list .nav-item.active').data('id');
 
             pageData.sectionId = split[6];
             pageData.seq = split[7];
@@ -118,36 +160,38 @@
          * Sets a callback for the user-log function.
          * @param callback the function to call
          */
-        Lib.setLogCallback = function (callback) {
-            logCallback = callback;
+        Lib.setUserLogCallback = function (callback) {
+            userLogCallback = callback;
+        };
+
+        /**
+         * Sets a callback for the problem-log function.
+         * @param callback the function to call
+         */
+        Lib.setProblemLogCallback = function (callback) {
+            problemLogCallback = callback;
+        };
+
+        /**
+         * Sets a callback for the video-log function.
+         * @param callback the function to call
+         */
+        Lib.setVideoLogCallback = function (callback) {
+            videoLogCallback = callback;
         };
 
         /**
          * The default logging function for user activity.
          * If a callback is set this will be used.
-         * @param arg1 optional argument for callback
-         * @param arg2 optional argument for callback
-         * @throws TypeError if serverURL or userData is missing
+         * @param args optional argument for callback
          */
-        Lib.logUserActivity = function (arg1,arg2) {
+        Lib.logUserActivity = function (args) {
 
-            var error = false;
-            //Check if there is a server url
-            if (typeof(serverURL) === 'undefined' ){
-                console.error("serverURL is not present! Dit you run setServer?");
-                error = true;
-            }
-            //check if userData is present
-            if (typeof(userData) === 'undefined') {
-                console.error("userData is not present! Dit you run loadUserData?");
-                error = true;
+            if (!Lib.logCheck()) {
+                return false;
             }
 
-            if (error) {
-                throw new TypeError("undefined variable(s)");
-            }
-
-            var settings = {
+            let settings = {
                 "async": true,
                 "crossDomain": true,
                 "url": serverURL + "/edx/logUserActivity",
@@ -161,18 +205,139 @@
                     "timeLeave": new Date()
                 }
             };
-            if(typeof(logCallback) === 'undefined') {
+            if(typeof(userLogCallback) === 'undefined') {
                 $.ajax(settings)
             } else {
                 $.ajax(settings).done(function (response) {
-                    logCallback(arg1,arg2)
+                    userLogCallback(args)
                 });
             }
 
         };
 
-        Lib.trackUser = function () {
+        Lib.logProblemActivity = function (args) {
+            if (!Lib.logCheck()) {
+                return false;
+            }
 
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": serverURL + "/edx/logProblemActivity",
+                "method": "POST",
+                "data": {
+                    "user": userData.userId,
+                    "problemId": problemId
+                }
+            };
+            if(typeof(userLogCallback) === 'undefined') {
+                $.ajax(settings)
+            } else {
+                $.ajax(settings).done(function (response) {
+                    problemLogCallback(args)
+                });
+            }
+        };
+
+        /**
+         * Sets up the user tracking in a page.
+         * @param {Boolean} replace true if the customFunction replaces the default function.
+         * @param {Function} customFunction The custom function for the tracker
+         * @param {object } arg Arguments for the function
+         * @returns {boolean} returns false if there was an error
+         */
+        Lib.trackUser = function (replace,customFunction,arg) {
+            //Only works on edx page
+            if (!Lib.isEdx()){
+                if(showMessages){
+                    console.error("To gather page data this must be called on the Edx page!");
+                    throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+                }
+                return false;
+            }
+
+            //Build the default function
+            // eventType, data, element are elements form the Logger callback
+            let func = function (eventType, data, element) {
+                if (replace === false) {
+                    //TODO create default tracker function
+                    console.log("Tracked the user");
+                }
+
+                //Add custom function if needed
+                if (typeof(customFunction) === "function") {
+                    customFunction(arg,eventType, data, element);
+                }
+            };
+
+            //Check for logger
+            if (typeof(window.Logger.listen) === "function") {
+                //Build all loggers
+                Logger.listen("edx.ui.lms.sequence.tab_selected",null, func);
+                Logger.listen("edx.ui.lms.sequence.next_selected",null, func);
+                Logger.listen("edx.ui.lms.sequence.previous_selected",null, func);
+                Logger.listen("edx.ui.lms.link_clicked",null, func);
+            } else {
+                if (showMessages) {
+                    console.error("Logger is not defined");
+                }
+            }
+
+            //Place event on window close.
+            $(window).on('beforeunload', function(){
+                func();
+            });
+
+
+
+        };
+
+
+        /**
+         * Sets up the problem tracking in a page.
+         * @param {Boolean} replace true if the customFunction replaces the default function.
+         * @param {Function} customFunction The custom function for the tracker
+         * @param {object } arg Arguments for the function
+         * @returns {boolean} returns false if there was an error
+         */
+        Lib.trackProblems = function (replace,customFunction,arg) {
+            //Only works on edx page
+            if (!Lib.isEdx()){
+                if(showMessages){
+                    console.error("To gather page data this must be called on the Edx page!");
+                    throw new Error("Edx page element was not found. Are we on the correct page or did Edx not load?");
+                }
+                return false;
+            }
+
+            //Build the default function
+            // eventType, data, element are elements form the Logger callback
+            let func = function (eventType, data, element) {
+                if (replace === false) {
+                    //TODO create default tracker function
+
+
+                    console.log("Tracked the problem");
+                    console.log("type: " + eventType);
+                    console.log("data: " + data);
+                    console.log("element: " + element);
+                }
+
+                //Add custom function if needed
+                if (typeof(customFunction) === "function") {
+                    customFunction(arg,eventType, data, element);
+                }
+            };
+
+            //Check for logger
+            if (typeof(window.Logger.listen) === "function") {
+                //Build all loggers
+                Logger.listen("problem_check",null, func);
+            } else {
+                if (showMessages) {
+                    console.error("Logger is not defined");
+                }
+            }
         };
 
         //Returns the instance
