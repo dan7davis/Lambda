@@ -10,17 +10,23 @@
         let Lib = {};
 
         //Private variable
+        //Configs
         const version = "1.0-alpha";
         let serverURL = undefined;
+        let showMessages = true;
+        let setUp = false;
 
+        //analytic data
         let userData = {};
         let pageData = {};
-
         let loadTime = new Date();
+
+        //Callbacks
         let userLogCallback;
         let problemLogCallback;
         let videoLogCallback;
-        let showMessages = true;
+
+
 
         //Methods
         /**
@@ -45,6 +51,14 @@
          */
         Lib.suppressMessages = function () {
           showMessages = false;
+        };
+
+        /**
+         * runs all the data gather functions
+         */
+        Lib.gatherData = function () {
+            Lib.loadPageData();
+            Lib.loadUserData();
         };
 
         /**
@@ -184,6 +198,22 @@
         };
 
         /**
+         * Sets the setUp state to true
+         */
+        Lib.setUp = function () {
+            setUp = true;
+        };
+
+
+        /**
+         * Check if we already run the setup code
+         * @return {boolean} setUp state
+         */
+        Lib.isSetUp = function () {
+            return setUp
+        };
+
+        /**
          * The default logging function for user activity.
          * If a callback is set this will be used.
          * @param args optional argument for callback
@@ -299,8 +329,8 @@
             //Build the default function
             // eventType, data, element are elements form the Logger callback
             let func = function (eventType, data, element) {
-                if (replace === false) {
-                    //TODO create default tracker function
+                if (replace == false) {
+                    Lib.logUserActivity();
                     console.log("Tracked the user");
                 }
 
@@ -353,7 +383,7 @@
             //Build the default function
             // eventType, data, element are elements form the Logger callback
             let func = function (eventType, data, element) {
-                if (replace === false) {
+                if (replace == false) {
                     //TODO create default tracker function
 
 
