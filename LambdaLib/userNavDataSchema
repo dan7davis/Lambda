@@ -1,0 +1,11 @@
+{
+  "userId": "Number",
+  "userName": "String",
+  "start-time": "Date",
+  "end-time": "Date",
+  "origin-sectionId": "String",
+  "origin-seq": "Sring",
+  "origin-vert": "String",
+  "origin-courseId": "String",
+  "destination": "String" //If the destination is not on the same EdX-page this is set to none.
+}

@@ -197,19 +197,20 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": serverURL + "/edx/logUserActivity",
+                "url": serverURL + "/lambda/logUserActivity",
                 "method": "POST",
                 "data": {
-                    "user": userData.userId,
-                    "courseId": userData.courseId,
-                    "section": userData.sectionId,
-                    "verticalId": userData.vert,
+                    "userId": userData.userId,
+                    "courseId": pageData.courseId,
+                    "sectionId": pageData.sectionId,
+                    "verticalId": pageData.vert,
                     "timeStart": loadTime,
-                    "timeLeave": new Date()
                 }
             };
             if(typeof(userLogCallback) === 'undefined') {
-                $.ajax(settings)
+                $.ajax(settings).done(function (response) {
+                    console.log(response);
+                })
             } else {
                 $.ajax(settings).done(function (response) {
                     userLogCallback(args)
@@ -253,7 +254,7 @@
          * If a callback is set this will be used.
          * @param args optional argument for callback
          */
-        Lib.logVideoActivity = function () {
+        Lib.logVideoActivity = function (args) {
             if (!Lib.logCheck()) {
                 return false;
             }
