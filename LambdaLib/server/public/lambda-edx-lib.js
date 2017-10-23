@@ -163,7 +163,7 @@
 
             let url = window.location.href;
             let split = url.split("/");
-            let block = $('#sequence-list .nav-item.active').data('id');
+            let block = $('#sequence-list').find('.nav-item.active').data('id');
 
             pageData.sectionId = split[6];
             pageData.seq = split[7];
@@ -331,7 +331,7 @@
             //Build the default function
             // eventType, data, element are elements form the Logger callback
             let func = function (eventType, data, element) {
-                if (replace == false) {
+                if (replace === false || replace === undefined) {
                     Lib.logUserActivity();
                     console.log("Tracked the user");
                 }
@@ -385,9 +385,8 @@
             //Build the default function
             // eventType, data, element are elements form the Logger callback
             let func = function (eventType, data, element) {
-                if (replace == false || replace == undefined) {
-                    let problemId = data.split("_")[1];
-                    pageData.problemId = problemId;
+                if (replace === false || replace === undefined) {
+                    pageData.problemId = data.split("_")[1];
                     Lib.logProblemActivity();
                 }
 
@@ -436,7 +435,7 @@
             //Build the default function
             // eventType, data, element are elements form the Logger callback
             let pauseFunc = function (eventType, data, element) {
-                if (replace === false) {
+                if (replace === false || replace === undefined) {
                     //TODO create default tracker function
                     console.log(data);
                     if (videoLogs[data.id]) {
