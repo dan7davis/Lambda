@@ -2,7 +2,7 @@
 <script src="https://server.casparkrijgsman.com/static/modCode.js"></script>
 <script type="text/javascript">
     function fireWhenReady() {
-        if (typeof LambdaLib != 'undefined' && typeof LambdaSetup != 'undefined') {
+        if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof  analytics !== 'undefined') {
             LambdaSetup();
         }
         else {

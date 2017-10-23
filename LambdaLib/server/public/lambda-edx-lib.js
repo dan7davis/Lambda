@@ -297,9 +297,14 @@
                 "url": serverURL + "/lambda/logVideoActivity",
                 "method": "POST",
                 "data": {
-                    "user": userData.userId,
-                    "section": userData.sectionId,
-                    "videoId": videoId
+                    "userId": userData.userId,
+                    "courseId": pageData.courseId,
+                    "sectionId": pageData.sectionId,
+                    "verticalId": pageData.vert,
+                    "videoId": pageData.videoId,
+                    "videoStart": pageData.videoStart,
+                    "videoEnd": pageData.videoEnd,
+                    "timeWatched": pageData.timeWatched
                 }
             };
             if(typeof(userLogCallback) === 'undefined') {
@@ -428,7 +433,6 @@
 
             // eventType, data, element are elements form the Logger callback
             let playFunc = function (eventType, data, element) {
-                console.log(data);
                 videoLogs[data.id] = data.currentTime;
             };
 
@@ -436,12 +440,14 @@
             // eventType, data, element are elements form the Logger callback
             let pauseFunc = function (eventType, data, element) {
                 if (replace === false || replace === undefined) {
-                    //TODO create default tracker function
-                    console.log(data);
                     if (videoLogs[data.id]) {
-                        console.log("time watched: " + (data.currentTime - videoLogs[data.id]));
+                        pageData.videoId = data.id;
+                        pageData.videoStart = videoLogs[data.id];
+                        pageData.videoEnd = data.currentTime;
+                        pageData.timeWatched = data.currentTime - videoLogs[data.id];
+
                         delete videoLogs[data.id];
-                        console.log(videoLogs);
+                        Lib.logVideoActivity();
                     }
                 }
 

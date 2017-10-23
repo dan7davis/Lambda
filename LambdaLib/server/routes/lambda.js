@@ -33,6 +33,7 @@ let Schema = mongoose.Schema;
 
 let UserTrackingDB = require('../schemas/userTracking.js');
 let ProblemTrackingDB = require('../schemas/problemTracking.js');
+let VideoTrackingDB = require('../schemas/videoTracking.js');
 
 
 // ROUTES FOR OUR API
@@ -78,7 +79,7 @@ router.route("/logUserActivity").post(function (req, res) {
             if (err) {
                 return console.error(err);
             }
-            console.log("entry saved");
+            console.log("log entry saved");
             res.end("entry saved");
         });
 
@@ -114,7 +115,53 @@ router.route("/logProblemActivity").post(function (req, res) {
             if (err) {
                 return console.error(err);
             }
-            console.log("entry saved");
+            console.log("problem entry saved");
+            res.end("entry saved");
+        });
+    }
+
+
+
+});
+
+router.route("/logVideoActivity").post(function (req, res) {
+    let userId = req.body.userId;
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+    let verticalId = req.body.verticalId;
+    let videoId = req.body.videoId;
+    let videoStart = req.body.videoStart;
+    let videoEnd = req.body.videoEnd;
+    let timeWatched = req.body.timeWatched;
+
+    let checking = [];
+    checking.push(userId);
+    checking.push(courseId);
+    checking.push(sectionId);
+    checking.push(verticalId);
+    checking.push(videoId);
+    checking.push(videoStart);
+    checking.push(videoEnd);
+    checking.push(timeWatched);
+
+    //Check if all the data is present
+    if (required(checking)) {
+        let data = {
+            userId: String(userId),
+            courseId: courseId,
+            sectionId: sectionId,
+            verticalId: verticalId,
+            videoId: videoId,
+            videoStart: videoStart,
+            videoEnd: videoEnd,
+            timeWatched: timeWatched
+        };
+
+        VideoTrackingDB.create(data, function (err, entry) {
+            if (err) {
+                return console.error(err);
+            }
+            console.log("video entry saved");
             res.end("entry saved");
         });
     }

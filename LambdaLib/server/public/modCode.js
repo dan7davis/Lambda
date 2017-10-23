@@ -12,8 +12,9 @@ function LambdaSetup() {
 
         //Set up trackers
         LambdaLib.setServer("https://server.casparkrijgsman.com");
-        LambdaLib.trackUser(false);
-        LambdaLib.trackProblems(false);
+        LambdaLib.trackUser();
+        LambdaLib.trackProblems();
+        LambdaLib.trackVideo();
         console.log("setUp complete");
     }
 }
