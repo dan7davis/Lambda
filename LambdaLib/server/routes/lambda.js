@@ -32,6 +32,7 @@ mongoose.connection.on('disconnected', function () {
 let Schema = mongoose.Schema;
 
 let UserTrackingDB = require('../schemas/userTracking.js');
+let ProblemTrackingDB = require('../schemas/problemTracking.js');
 
 
 // ROUTES FOR OUR API
@@ -82,12 +83,45 @@ router.route("/logUserActivity").post(function (req, res) {
         });
 
     }
-
     res.end("error");
+});
+
+router.route("/logProblemActivity").post(function (req, res) {
+    let userId = req.body.userId;
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+    let verticalId = req.body.verticalId;
+    let problemId = req.body.problemId;
+
+    let checking = [];
+    checking.push(userId);
+    checking.push(courseId);
+    checking.push(sectionId);
+    checking.push(verticalId);
+    checking.push(problemId);
+
+    //Check if all the data is present
+    if (required(checking)) {
+        let data = {
+            userId: String(userId),
+            courseId: courseId,
+            sectionId: sectionId,
+            verticalId: verticalId,
+            problemId: problemId
+        };
+
+        ProblemTrackingDB.create(data, function (err, entry) {
+            if (err) {
+                return console.error(err);
+            }
+            console.log("entry saved");
+            res.end("entry saved");
+        });
+    }
+
 
 
 });
-
 
 /**
  * Checks if all variables are set

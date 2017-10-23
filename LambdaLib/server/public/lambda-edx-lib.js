@@ -238,9 +238,7 @@
                 }
             };
             if(typeof(userLogCallback) === 'undefined') {
-                $.ajax(settings).done(function (response) {
-                    console.log(response);
-                })
+                $.ajax(settings)
             } else {
                 $.ajax(settings).done(function (response) {
                     userLogCallback(args)
@@ -262,16 +260,20 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": serverURL + "/edx/logProblemActivity",
+                "url": serverURL + "/lambda/logProblemActivity",
                 "method": "POST",
                 "data": {
-                    "user": userData.userId,
-                    "section": userData.sectionId,
-                    "problemId": problemId
+                    "userId": userData.userId,
+                    "courseId": pageData.courseId,
+                    "sectionId": pageData.sectionId,
+                    "verticalId": pageData.vert,
+                    "problemId": pageData.problemId
                 }
             };
             if(typeof(userLogCallback) === 'undefined') {
-                $.ajax(settings)
+                $.ajax(settings).done(function (response) {
+                    console.log(response);
+                })
             } else {
                 $.ajax(settings).done(function (response) {
                     problemLogCallback(args)
@@ -292,7 +294,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": serverURL + "/edx/logVideoActivity",
+                "url": serverURL + "/lambda/logVideoActivity",
                 "method": "POST",
                 "data": {
                     "user": userData.userId,
@@ -354,7 +356,7 @@
             }
 
             //Place event on window close.
-            $(window).on('beforeunload', function(){
+            window.addEventListener("beforeunload", function(){
                 func();
             });
 
@@ -383,14 +385,10 @@
             //Build the default function
             // eventType, data, element are elements form the Logger callback
             let func = function (eventType, data, element) {
-                if (replace == false) {
-                    //TODO create default tracker function
-
-
-                    console.log("Tracked the problem");
-                    console.log("type: " + eventType);
-                    console.log("data: " + data);
-                    console.log("element: " + element);
+                if (replace == false || replace == undefined) {
+                    let problemId = data.split("_")[1];
+                    pageData.problemId = problemId;
+                    Lib.logProblemActivity();
                 }
 
                 //Add custom function if needed
