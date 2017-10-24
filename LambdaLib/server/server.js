@@ -45,6 +45,10 @@ app.use('/static', express.static('public'));
 let lambda = require("./routes/lambda.js");
 app.use('/lambda', lambda);
 
+// Study planning will have the /study-planning prefix
+let SP = require("./routes/study-planning");
+app.use('/study-planning', SP);
+
 // START THE SERVER
 // =============================================================================
 http.createServer(app).listen(80);

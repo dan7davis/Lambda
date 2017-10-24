@@ -11,8 +11,8 @@
 
         //Private variable
         //Configs
-        const version = "1.0-alpha";
-        let serverURL = undefined;
+        const version = "1.0-beta";
+        let serverURL = "";
         let showMessages = true;
         let setUp = false;
 
@@ -77,13 +77,28 @@
             serverURL = URL;
         };
 
+        /**
+         * Get the server url that is set in the library.
+         * @returns {String} the url of the server (undefined by default)
+         */
+        Lib.getServerURL = function () {
+            return serverURL;
+        };
 
         /**
          * get the user data
          * @returns {Object} userData object
          */
         Lib.getUserData = function () {
-            return userData
+            return userData;
+        };
+
+        /**
+         * get the page data
+         * @returns {Object} pageData object
+         */
+        Lib.getPageData = function() {
+            return pageData;
         };
 
         /**
@@ -101,7 +116,7 @@
         Lib.logCheck = function () {
             let error = false;
             //Check if there is a server url
-            if (typeof(serverURL) === 'undefined' ){
+            if (typeof(serverURL) === 'undefined' || serverURL === ''){
                 if(showMessages) {
                     console.error("serverURL is not present! Dit you run setServer?");
                 }
@@ -241,7 +256,7 @@
                 $.ajax(settings)
             } else {
                 $.ajax(settings).done(function (response) {
-                    userLogCallback(args)
+                    userLogCallback(args, response)
                 });
             }
 
@@ -276,7 +291,7 @@
                 })
             } else {
                 $.ajax(settings).done(function (response) {
-                    problemLogCallback(args)
+                    problemLogCallback(args, response)
                 });
             }
         };
@@ -311,7 +326,7 @@
                 $.ajax(settings)
             } else {
                 $.ajax(settings).done(function (response) {
-                    problemLogCallback(args)
+                    problemLogCallback(args, response)
                 });
             }
         };
@@ -432,7 +447,7 @@
             let videoLogs = {};
 
             // eventType, data, element are elements form the Logger callback
-            let playFunc = function (eventType, data, element) {
+            let playFunc = function (eventType, data) {
                 videoLogs[data.id] = data.currentTime;
             };
 
@@ -469,6 +484,7 @@
             }
 
         };
+
 
         //Returns the instance
         return Lib

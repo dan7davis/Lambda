@@ -1,6 +1,3 @@
-/**
- * Created by caspar on 10/22/2017.
- */
 let express = require('express');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
@@ -16,31 +13,32 @@ let connectOptions = {
 mongoose.connect('mongodb://user:W9B2hbLj3rTu@localhost:27017/Lambda',connectOptions);
 
 mongoose.connection.on('connected', function () {
-    console.log('Lambda: Mongoose default connection open to Lambda database');
+    console.log('study-planning: Mongoose default connection open to Lambda database');
 });
 
 // If the connection throws an error
 mongoose.connection.on('error',function (err) {
-    console.log('Lambda: Mongoose default connection error: ' + err);
+    console.log('study-planning: Mongoose default connection error: ' + err);
 });
 
 // When the connection is disconnected
 mongoose.connection.on('disconnected', function () {
-    console.log('Lambda: Mongoose default connection disconnected');
+    console.log('study-planning: Mongoose default connection disconnected');
 });
 
 let Schema = mongoose.Schema;
 
-let UserTrackingDB = require('../schemas/userTracking.js');
 let ProblemTrackingDB = require('../schemas/problemTracking.js');
 let VideoTrackingDB = require('../schemas/videoTracking.js');
+let QuotesDB = require('../schemas/SP-quotes.js');
+let QuoteStoreDB = require('../schemas/SP-quotesStoring.js');
 
 
 // ROUTES FOR OUR API
 // =============================================================================
 
 // create our router
-let router = express.Router();
+var router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -50,20 +48,21 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.route("/logUserActivity").post(function (req, res) {
+/**
+ * Set a quote for an user for a week.
+ * and backups the old quote
+ */
+router.route("/setQuote").post(function (req, res) {
     let userId = req.body.userId;
     let courseId = req.body.courseId;
     let sectionId = req.body.sectionId;
-    let verticalId = req.body.verticalId;
-    let timeStart = req.body.timeStart;
+    let quote = req.body.quote;
 
     let checking = [];
     checking.push(userId);
     checking.push(courseId);
     checking.push(sectionId);
-    checking.push(verticalId);
-    checking.push(timeStart);
-
+    checking.push(quote);
 
     //Check if all the data is present
     if (required(checking)) {
@@ -71,104 +70,68 @@ router.route("/logUserActivity").post(function (req, res) {
             userId: String(userId),
             courseId: courseId,
             sectionId: sectionId,
-            verticalId: verticalId,
-            timeStart: timeStart
+            quote: quote,
+            updateTime: new Date()
         };
 
-        UserTrackingDB.create(data, function (err, entry) {
-            if (err !== null) {
-                return console.error(err);
+        //save old record
+        QuotesDB.findOne({userId: userId, courseId: courseId, sectionId: sectionId}, function (err, entry) {
+            if (typeof entry !== 'undefined') {
+                let save = {
+                    userId: entry.userId,
+                    courseId: entry.courseId,
+                    sectionId: entry.sectionId,
+                    quote: entry.quote,
+                    placedTime: entry.updateTime
+                };
+
+                QuoteStoreDB.create(save, function (err) {
+                    if (err !== null) {
+                        return console.error(err);
+                    }
+                });
             }
-            console.log("log entry saved");
-            res.end("entry saved");
         });
 
+        //update current quote
+        QuotesDB.findOneAndUpdate({userId: userId, courseId: courseId, sectionId: sectionId}, data, {upsert:true, setDefaultsOnInsert: true}, function(err){
+            if (err) return res.send(500, { error: err });
+            return res.end("successfully saved");
+        });
+
+    }
+    res.end("error");
+});
+
+router.route("/getQuote").post(function (req, res) {
+    let userId = req.body.userId;
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+
+    let checking = [];
+    checking.push(userId);
+    checking.push(courseId);
+    checking.push(sectionId);
+
+    //Check if all the data is present
+    if (required(checking)) {
+        let data = {
+            userId: String(userId),
+            courseId: courseId,
+            sectionId: sectionId,
+        };
+
+        QuotesDB.findOne(data, function (err, entry) {
+            if (err !== null) {
+                res.end("error");
+                return console.error(err);
+            } else {
+                return res.json(entry);
+            }
+        })
     } else {
-        res.end("error");
+        return res.end("error");
     }
-});
-
-router.route("/logProblemActivity").post(function (req, res) {
-    let userId = req.body.userId;
-    let courseId = req.body.courseId;
-    let sectionId = req.body.sectionId;
-    let verticalId = req.body.verticalId;
-    let problemId = req.body.problemId;
-
-    let checking = [];
-    checking.push(userId);
-    checking.push(courseId);
-    checking.push(sectionId);
-    checking.push(verticalId);
-    checking.push(problemId);
-
-    //Check if all the data is present
-    if (required(checking)) {
-        let data = {
-            userId: String(userId),
-            courseId: courseId,
-            sectionId: sectionId,
-            verticalId: verticalId,
-            problemId: problemId
-        };
-
-        ProblemTrackingDB.create(data, function (err, entry) {
-            if (err !== null) {
-                return console.error(err);
-            }
-            console.log("problem entry saved");
-            res.end("entry saved");
-        });
-    }
-
-
-
-});
-
-router.route("/logVideoActivity").post(function (req, res) {
-    let userId = req.body.userId;
-    let courseId = req.body.courseId;
-    let sectionId = req.body.sectionId;
-    let verticalId = req.body.verticalId;
-    let videoId = req.body.videoId;
-    let videoStart = req.body.videoStart;
-    let videoEnd = req.body.videoEnd;
-    let timeWatched = req.body.timeWatched;
-
-    let checking = [];
-    checking.push(userId);
-    checking.push(courseId);
-    checking.push(sectionId);
-    checking.push(verticalId);
-    checking.push(videoId);
-    checking.push(videoStart);
-    checking.push(videoEnd);
-    checking.push(timeWatched);
-
-    //Check if all the data is present
-    if (required(checking)) {
-        let data = {
-            userId: String(userId),
-            courseId: courseId,
-            sectionId: sectionId,
-            verticalId: verticalId,
-            videoId: videoId,
-            videoStart: videoStart,
-            videoEnd: videoEnd,
-            timeWatched: timeWatched
-        };
-
-        VideoTrackingDB.create(data, function (err, entry) {
-            if (err !== null) {
-                return console.error(err);
-            }
-            console.log("video entry saved");
-            res.end("entry saved");
-        });
-    }
-
-
-
 });
 
 /**

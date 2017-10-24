@@ -1,8 +1,9 @@
 <script src="https://server.casparkrijgsman.com/static/lambda-edx-lib.js"></script>
+<script src="https://server.casparkrijgsman.com/static/lambda-study-planning.js"></script>
 <script src="https://server.casparkrijgsman.com/static/modCode.js"></script>
 <script type="text/javascript">
     function fireWhenReady() {
-        if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof  analytics !== 'undefined') {
+        if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof  analytics._user._getTraits() !== 'undefined') {
             LambdaSetup();
         }
         else {
