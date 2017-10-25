@@ -15,6 +15,11 @@ function LambdaSetup() {
         LambdaLib.trackUser();
         LambdaLib.trackProblems();
         LambdaLib.trackVideo();
+
+        LambdaLib.SP.setQualityRef('https://edge.edx.org/asset-v1:DelftX+DD.003x+2017+type@asset+block@qualityPlanning.html');
         console.log("setUp complete");
     }
+
+    //Code to run after setup
+    LambdaLib.SP.getInitialData(true,true,false,false);
 }

@@ -1,14 +1,32 @@
-<script src="https://server.casparkrijgsman.com/static/lambda-edx-lib.js"></script>
-<script src="https://server.casparkrijgsman.com/static/lambda-study-planning.js"></script>
-<script src="https://server.casparkrijgsman.com/static/modCode.js"></script>
 <script type="text/javascript">
     function fireWhenReady() {
-        if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof  analytics._user._getTraits() !== 'undefined') {
-            LambdaSetup();
+        if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof analytics !== 'undefined') {
+            if (typeof LambdaLib.SP !== 'undefined' && typeof analytics._user !== 'undefined') {
+                LambdaSetup();
+            } else {
+                setTimeout(fireWhenReady, 100);
+            }
         }
         else {
             setTimeout(fireWhenReady, 100);
         }
     }
+
+    function loadNeededModules() {
+        loadScriptSync("https://server.casparkrijgsman.com/static/lambda-edx-lib.js");
+        loadScriptSync("https://server.casparkrijgsman.com/static/lambda-study-planning.js");
+        loadScriptSync("https://server.casparkrijgsman.com/static/modCode.js");
+    }
+
+    function loadScriptSync (src) {
+        let s = document.createElement('script');
+        s.src = src;
+        s.type = "text/javascript";
+        s.async = false;                                 // <-- this is important
+        document.getElementsByTagName('head')[0].appendChild(s);
+    }
+
+    $(document).ready(loadNeededModules());
     $(document).ready(fireWhenReady);
 </script>
+<div id="LambdaFrame"></div>
