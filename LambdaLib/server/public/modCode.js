@@ -1,7 +1,7 @@
 /**
  * Created by caspa on 10/23/2017.
  */
-function LambdaSetup() {
+function LambdaSetup(type) {
     //Get all data
     LambdaLib.gatherData();
 
@@ -21,5 +21,10 @@ function LambdaSetup() {
     }
 
     //Code to run after setup
-    LambdaLib.SP.getInitialData(true,true,false,false);
+    if (type === 1){
+        LambdaLib.SP.getInitialData(true,true,false,false);
+    } else {
+        LambdaLib.SP.getInitialData(true,false,false,false);
+    }
+
 }

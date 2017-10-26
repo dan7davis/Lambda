@@ -71,7 +71,7 @@
 
         /**
          * set the node Js server url.
-         * @param URL node server url
+         * @param {String} URL node server url
          */
         Lib.setServer = function (URL) {
             serverURL = URL;
@@ -190,7 +190,7 @@
 
         /**
          * Sets a callback for the user-log function.
-         * @param callback the function to call
+         * @param {Function} callback the function to call
          */
         Lib.setUserLogCallback = function (callback) {
             userLogCallback = callback;
@@ -198,7 +198,7 @@
 
         /**
          * Sets a callback for the problem-log function.
-         * @param callback the function to call
+         * @param {Function} callback the function to call
          */
         Lib.setProblemLogCallback = function (callback) {
             problemLogCallback = callback;
@@ -206,7 +206,7 @@
 
         /**
          * Sets a callback for the video-log function.
-         * @param callback the function to call
+         * @param {Function} callback the function to call
          */
         Lib.setVideoLogCallback = function (callback) {
             videoLogCallback = callback;
@@ -231,7 +231,7 @@
         /**
          * The default logging function for user activity.
          * If a callback is set this will be used.
-         * @param args optional argument for callback
+         * @param {Object} args optional argument for callback
          */
         Lib.logUserActivity = function (args) {
 
@@ -265,7 +265,7 @@
         /**
          * The default logging function for problem activity.
          * If a callback is set this will be used.
-         * @param args optional argument for callback
+         * @param {Object} args optional argument for callback
          */
         Lib.logProblemActivity = function (args) {
             if (!Lib.logCheck()) {
@@ -299,7 +299,7 @@
         /**
          * The default logging function for video activity.
          * If a callback is set this will be used.
-         * @param args optional argument for callback
+         * @param {Object} args optional argument for callback
          */
         Lib.logVideoActivity = function (args) {
             if (!Lib.logCheck()) {
@@ -335,7 +335,7 @@
          * Sets up the user tracking in a page.
          * @param {Boolean} replace true if the customFunction replaces the default function.
          * @param {Function} customFunction The custom function for the tracker
-         * @param {object } arg Arguments for the function
+         * @param {object} arg Arguments for the function
          * @returns {boolean} returns false if there was an error
          */
         Lib.trackUser = function (replace,customFunction,arg) {
@@ -389,7 +389,7 @@
          * Sets up the problem tracking in a page.
          * @param {Boolean} replace true if the customFunction replaces the default function.
          * @param {Function} customFunction The custom function for the tracker
-         * @param {object } arg Arguments for the function
+         * @param {object} arg Arguments for the function
          * @returns {boolean} returns false if there was an error
          */
         Lib.trackProblems = function (replace,customFunction,arg) {
@@ -431,7 +431,7 @@
          * Sets up the video tracking in a page.
          * @param {Boolean} replace true if the customFunction replaces the default function.
          * @param {Function} customFunction The custom function for the tracker
-         * @param {object } arg Arguments for the function
+         * @param {object} arg Arguments for the function
          * @returns {boolean} returns false if there was an error
          */
         Lib.trackVideo = function (replace,customFunction,arg) {

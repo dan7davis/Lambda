@@ -2,7 +2,7 @@
     function fireWhenReady() {
         if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof analytics !== 'undefined') {
             if (typeof LambdaLib.SP !== 'undefined' && typeof analytics._user !== 'undefined') {
-                LambdaSetup();
+                LambdaSetup(1);
             } else {
                 setTimeout(fireWhenReady, 100);
             }

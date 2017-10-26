@@ -28,17 +28,22 @@ mongoose.connection.on('disconnected', function () {
 
 let Schema = mongoose.Schema;
 
+let UserTrackingDB = require('../schemas/userTracking.js');
 let ProblemTrackingDB = require('../schemas/problemTracking.js');
 let VideoTrackingDB = require('../schemas/videoTracking.js');
+
 let QuotesDB = require('../schemas/SP-quotes.js');
 let QuoteStoreDB = require('../schemas/SP-quotesStoring.js');
+let GoalsDB = require('../schemas/SP-goal.js');
+let GoalsStoreDB = require('../schemas/SP-goalStoring.js');
+
 
 
 // ROUTES FOR OUR API
 // =============================================================================
 
 // create our router
-var router = express.Router();
+let router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -76,7 +81,7 @@ router.route("/setQuote").post(function (req, res) {
 
         //save old record
         QuotesDB.findOne({userId: userId, courseId: courseId, sectionId: sectionId}, function (err, entry) {
-            if (typeof entry !== 'undefined') {
+            if (entry !== null) {
                 let save = {
                     userId: entry.userId,
                     courseId: entry.courseId,
@@ -91,13 +96,15 @@ router.route("/setQuote").post(function (req, res) {
                     }
                 });
             }
+
+            //update current quote
+            QuotesDB.findOneAndUpdate({userId: userId, courseId: courseId, sectionId: sectionId}, data, {upsert:true, setDefaultsOnInsert: true}, function(err){
+                if (err) return res.send(500, { error: err });
+                return res.end("successfully saved");
+            });
         });
 
-        //update current quote
-        QuotesDB.findOneAndUpdate({userId: userId, courseId: courseId, sectionId: sectionId}, data, {upsert:true, setDefaultsOnInsert: true}, function(err){
-            if (err) return res.send(500, { error: err });
-            return res.end("successfully saved");
-        });
+
 
     }
     res.end("error");
@@ -129,6 +136,187 @@ router.route("/getQuote").post(function (req, res) {
                 return res.json(entry);
             }
         })
+    } else {
+        return res.end("error");
+    }
+});
+
+router.route("/setGoal").post(function (req, res) {
+    let userId = req.body.userId;
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+    let problems = req.body.problems;
+    let videos = req.body.videos;
+    let time = req.body.time;
+
+    let checking = [];
+    checking.push(userId);
+    checking.push(courseId);
+    checking.push(sectionId);
+    checking.push(problems);
+    checking.push(videos);
+    checking.push(time);
+
+    if (required(checking)) {
+        let data = {
+            userId: String(userId),
+            courseId: courseId,
+            sectionId: sectionId,
+            problems: problems,
+            videos: videos,
+            time: time,
+            updateTime: new Date()
+
+        };
+
+        //save old record
+        GoalsDB.findOne({userId: userId, courseId: courseId, sectionId: sectionId}, function (err, entry) {
+            if (entry !== null) {
+                let save = {
+                    userId: entry.userId,
+                    courseId: entry.courseId,
+                    sectionId: entry.sectionId,
+                    problems: entry.problems,
+                    videos: entry.videos,
+                    time: entry.time,
+                    placedTime: entry.updateTime
+                };
+
+                GoalsStoreDB.create(save, function (err) {
+                    if (err !== null) {
+                        return console.error(err);
+                    }
+                });
+            }
+
+            //Update current record
+            GoalsDB.findOneAndUpdate({userId: userId, courseId: courseId, sectionId: sectionId}, data, {upsert: true, setDefaultsOnInsert: true}, function(err){
+                if (err) return res.send(500, { error: err });
+                return res.end("successfully saved");
+            });
+
+        });
+
+    }
+    res.end("error");
+});
+
+router.route("/getGoal").post(function (req, res) {
+    let userId = req.body.userId;
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+
+    let checking = [];
+    checking.push(userId);
+    checking.push(courseId);
+    checking.push(sectionId);
+
+    //Check if all the data is present
+    if (required(checking)) {
+        let data = {
+            userId: String(userId),
+            courseId: courseId,
+            sectionId: sectionId,
+        };
+
+        GoalsDB.findOne(data, function (err, entry) {
+            if (err !== null) {
+                res.end("error");
+                return console.error(err);
+            } else {
+                return res.json(entry);
+            }
+        })
+    } else {
+        return res.end("error");
+    }
+});
+
+router.route("/getProgress").post(function (req, res) {
+    let userId = req.body.userId;
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+
+    let checking = [];
+    checking.push(userId);
+    checking.push(courseId);
+    checking.push(sectionId);
+
+    //Check if all the data is present
+    if (required(checking)) {
+        let data = {
+            userId: String(userId),
+            courseId: courseId,
+            sectionId: sectionId,
+        };
+
+        //This contains all the return data
+        let returner = {};
+
+        //Problem progress
+        ProblemTrackingDB.find(data).distinct('problemId').exec(function(err, result) {
+            if (err !== null) {
+                res.end("error");
+                return console.error(err);
+            } else {
+                returner.problemsCount = result.length;
+
+                //Video progress
+                VideoTrackingDB.aggregate(
+                    [
+                        {
+                            $match: data
+                        },
+                        {
+                            $group:
+                                {
+                                    _id: "$videoId",
+                                    timeWatched: { $sum: "$timeWatched" }
+                                }
+                        }
+                    ], function(err, result) {
+                        if (err !== null) {
+                            res.end("error");
+                            return console.error(err);
+                        } else {
+                            //Count the videos with more than 30 seconds
+                            returner.videoCount = 0;
+                            result.forEach(function (record) {
+                                if (record.timeWatched > 30) {
+                                    returner.videoCount++;
+                                }
+                            });
+
+
+                            //Time progress
+                            UserTrackingDB.aggregate(
+                                [
+                                    {
+                                        $match: data
+                                    },
+                                    {
+                                        $group:
+                                            {
+                                                _id: "$userId",
+                                                timeSpendOnCourse: { $sum: { $subtract: ["$timeLeave","$timeStart"]} }
+                                            }
+                                    }
+                                ], function(err, result) {
+                                    if (err !== null) {
+                                        res.end("error");
+                                        return console.error(err);
+                                    } else {
+                                        //change time to hours
+                                        returner.timeCount = result[0].timeSpendOnCourse / 3600000;
+                                        return res.json(returner);
+                                    }
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+        });
     } else {
         return res.end("error");
     }
