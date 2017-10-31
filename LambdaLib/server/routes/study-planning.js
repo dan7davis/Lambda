@@ -1,5 +1,4 @@
 let express = require('express');
-let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 
 //Get promise library
@@ -26,7 +25,6 @@ mongoose.connection.on('disconnected', function () {
     console.log('study-planning: Mongoose default connection disconnected');
 });
 
-let Schema = mongoose.Schema;
 
 let UserTrackingDB = require('../schemas/userTracking.js');
 let ProblemTrackingDB = require('../schemas/problemTracking.js');
@@ -36,6 +34,7 @@ let QuotesDB = require('../schemas/SP-quotes.js');
 let QuoteStoreDB = require('../schemas/SP-quotesStoring.js');
 let GoalsDB = require('../schemas/SP-goal.js');
 let GoalsStoreDB = require('../schemas/SP-goalStoring.js');
+let LayoutDB = require('../schemas/SP-layout.js');
 
 
 
@@ -110,6 +109,9 @@ router.route("/setQuote").post(function (req, res) {
     res.end("error");
 });
 
+/**
+ *Gets the most resent quote of a user form an week and sends it to the client.
+ */
 router.route("/getQuote").post(function (req, res) {
     let userId = req.body.userId;
     let courseId = req.body.courseId;
@@ -141,6 +143,10 @@ router.route("/getQuote").post(function (req, res) {
     }
 });
 
+/**
+ * Set a (new) goal for an user for a week.
+ * creates a backup of the old goal (if existing).
+ */
 router.route("/setGoal").post(function (req, res) {
     let userId = req.body.userId;
     let courseId = req.body.courseId;
@@ -201,6 +207,9 @@ router.route("/setGoal").post(function (req, res) {
     res.end("error");
 });
 
+/**
+ * Get the most resent goal form an user form a week and send its to the client.
+ */
 router.route("/getGoal").post(function (req, res) {
     let userId = req.body.userId;
     let courseId = req.body.courseId;
@@ -232,6 +241,9 @@ router.route("/getGoal").post(function (req, res) {
     }
 });
 
+/**
+ * get the progress number for an user from a week and sends it to the client.
+ */
 router.route("/getProgress").post(function (req, res) {
     let userId = req.body.userId;
     let courseId = req.body.courseId;
@@ -319,6 +331,74 @@ router.route("/getProgress").post(function (req, res) {
         });
     } else {
         return res.end("error");
+    }
+});
+
+/**
+ * receives the course layout data and stores it in the database.
+ */
+router.route("/courseLayoutUpload").post(function (req, res) {
+    let courseId = req.body.courseId;
+    let map = req.body.map;
+    let time = req.body.time;
+
+    let checking = [];
+    checking.push(map);
+    checking.push(courseId);
+    checking.push(time);
+
+    if (required(checking)) {
+
+
+        for (let i = 0; i < map.length; i++) {
+            let week = map[i];
+
+            let data = {
+                courseId: courseId,
+                sectionId: week[0],
+                problems: week[2],
+                videos: week[1],
+                time: time
+            };
+
+
+            LayoutDB.create(data, function (err) {
+                if (err !== null) {
+                    return console.error(err);
+                }
+            })
+
+
+        }
+        return res.end("successfully saved");
+    } else {
+        return res.end("error");
+    }
+});
+
+router.route("/getLayout").post(function (req, res) {
+    let courseId = req.body.courseId;
+    let sectionId = req.body.sectionId;
+
+    let checking = [];
+    checking.push(courseId);
+    checking.push(sectionId);
+
+    if(required(checking)) {
+        let data = {
+            courseId: courseId,
+            sectionId: sectionId
+        };
+
+        LayoutDB.find(data, function (err, result) {
+            if (err !== null) {
+                res.end("error");
+                return console.error(err);
+            } else {
+                return res.json(result);
+            }
+        })
+
     }
 });
 

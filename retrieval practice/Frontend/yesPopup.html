@@ -401,7 +401,7 @@
      * Shows that you answered correct.
      */
     function correct() {
-        $('#feedback').addClass("correct");
+        $('#LambdaQuantityFeedback').addClass("correct");
         $('#feedback-icon').addClass("correct");
         console.log("this was correct");
         $(".tip").hide();
@@ -435,7 +435,7 @@
      * Shows that you answered incorrect.
      */
     function inCorrect() {
-        $('#feedback').addClass("incorrect");
+        $('#LambdaQuantityFeedback').addClass("incorrect");
         $('#feedback-icon').addClass("incorrect");
         console.log("this was incorrect");
         dialogAnswered = true;
@@ -475,7 +475,7 @@
      */
     function buildDialog(problem) {
         //Clear old feedback text
-        var feedbackBox= $('#feedback');
+        var feedbackBox= $('#LambdaQuantityFeedback');
         $('#feedback-text').text("");
         feedbackBox.className = "correctness";
         $('#feedback-icon').className = "feedback-icon";

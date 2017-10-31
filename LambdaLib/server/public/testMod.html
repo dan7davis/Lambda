@@ -1,22 +1,20 @@
 <script type="text/javascript">
+    /* Type parameter values for this version */
+//    nothing: sensor mode
+//    1: Quality feedback
+//    2: Quality input
+//    3: Quantity feedback
+//    4: Quantity input
+//    5: Both quantity and quality input
     function fireWhenReady() {
-        if (typeof LambdaLib !== 'undefined' && typeof LambdaSetup !== 'undefined' && typeof analytics !== 'undefined') {
-            if (typeof LambdaLib.SP !== 'undefined' && typeof analytics._user !== 'undefined') {
-                LambdaSetup();
-            } else {
-                setTimeout(fireWhenReady, 100);
-            }
-        }
-        else {
+        if (typeof LambdaSetupCheck !== 'undefined' && typeof loadNeededModules !== 'undefined') {
+            loadNeededModules();
+
+            //Add parameter for mode select
+            LambdaSetupCheck();
+        } else {
             setTimeout(fireWhenReady, 100);
         }
-    }
-
-    function loadNeededModules() {
-        loadScriptSync("https://server.casparkrijgsman.com/static/lambda-edx-lib.js");
-        loadScriptSync("https://server.casparkrijgsman.com/static/sp/progressbar.min.js");
-        loadScriptSync("https://server.casparkrijgsman.com/static/sp/lambda-study-planning.js");
-        loadScriptSync("https://server.casparkrijgsman.com/static/modCode.js");
     }
 
     function loadScriptSync (src) {
@@ -27,7 +25,12 @@
         document.getElementsByTagName('head')[0].appendChild(s);
     }
 
-    $(document).ready(loadNeededModules());
+    function loadSetup() {
+        //setup Script
+        loadScriptSync("https://server.casparkrijgsman.com/static/modCode.js");
+    }
+
+    $(document).ready(loadSetup);
     $(document).ready(fireWhenReady);
 </script>
 <div id="LambdaFrame"></div>

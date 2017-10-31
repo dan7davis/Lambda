@@ -1,17 +1,17 @@
 <style type="text/css">
-    #videobar {
+    #videoBar {
         margin-top: 20px;
         margin-bottom: 20px;
         height: 100px;
     }
 
-    #questionbar {
+    #problemBar {
         margin-top: 20px;
         margin-bottom: 20px;
         height: 100px;
     }
 
-    #timebar {
+    #timeBar {
         margin-top: 20px;
         margin-bottom: 20px;
         height: 100px;
@@ -74,9 +74,11 @@
 
     .bar {
         width: 100%;
+        font-size: 16px; !important;
     }
 
     .text {
+        font-size: 16PX; !important;
         text-align: center;
         margin-top: 30px;
     }
@@ -92,15 +94,15 @@
         box-shadow: none !important;
     }
 
-    #vidIntended {
+    #vidText {
         max-width: 250px
     }
 
-    #questionIntended {
+    #problemText {
         max-width: 250px
     }
 
-    #timeIntended {
+    #timeText {
         max-width: 250px
     }
 
@@ -182,7 +184,7 @@
         font-size: 100%;
         line-height: 100%;
         text-align: center;
-        padding: 0px;
+        padding: 0;
         border: none;
         border-bottom: solid 3px #c9c9c9;
     }
@@ -224,21 +226,22 @@
 
     .feedBackColl {
         width: 250px;
+        margin-right: 20px;
     }
 
-    #input {
+    #LambdaQuantityInput {
         display: none;
 
     }
 
-    #feedback {
+    #LambdaQuantityFeedback {
         display: block;
     }
 </style>
 
 <!-- HTML Content for the quantity applet -->
 <div id="quantityContent">
-    <div id="feedback">
+    <div id="LambdaQuantityFeedback">
         <div class="main">
             <div id="bars">
                 <p class="header">Progress towards your goals this week:</p>
@@ -246,19 +249,19 @@
                 <div class="three">
                     <div id="col1" class="feedBackColl">
                         <div class="vidFeedback titel">Videos</div>
-                        <div id="videobar" class="bar"></div>
-                        <div id="vidIntended" class="text"></div>
+                        <div id="videoBar" class="bar"></div>
+                        <div id="vidText" class="text"></div>
                     </div>
                     <div id="col2" class="feedBackColl">
                         <div class="quizFeedback titel">Questions</div>
-                        <div id="questionbar" class="bar"></div>
-                        <div id="questionIntended" class="text"></div>
+                        <div id="problemBar" class="bar"></div>
+                        <div id="problemText" class="text"></div>
 
                     </div>
                     <div id="col3" class="feedBackColl">
                         <div class="timeFeedback titel">Time (Hours)</div>
-                        <div id="timebar" class="bar"></div>
-                        <div id="timeIntended" class="text"></div>
+                        <div id="timeBar" class="bar"></div>
+                        <div id="timeText" class="text"></div>
 
                     </div>
 
@@ -269,32 +272,32 @@
             <div>
 
                 <br>
-                <p><input id="editGoals" type="submit" onclick="reveal();edited();editButtonReset();" value="Edit Goals" class="emerald-flat-button-small"></p>
+                <p><input id="editGoals" type="button" onclick="LambdaLib.SP.quantityToggle()" value="Edit Goals" class="emerald-flat-button-small"></p>
 
             </div>
         </div>
     </div>
 
-    <div id="input">
+    <div id="LambdaQuantityInput">
         <div class="main">
             <p class="header">THIS WEEK...</p>
             <form id="qtPlan">
                 <div class="three">
                     <p class="vid">I plan to <i>watch</i>...<br>
                         <br>
-                        <input class="txtenter" id="vids" type="text" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="vidzn"></span> <br>
+                        <input title="videoInput" class="txtenter" id="videoInput" type="number" onfocus="if(this.value == LambdaLib.SP.getLayout().videos) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="videoLayout"></span> <br>
                         <br>
                         Lecture Videos. </p>
 
                     <p class="quiz">I plan to <i>answer</i>...<br>
                         <br>
-                        <input class="txtenter" id="quizs" type="text" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="quizdzn"></span> <br>
+                        <input title="problemInput" class="txtenter" id="problemInput" type="number" onfocus="if(this.value == LambdaLib.SP.getLayout().problems) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="problemLayout"></span> <br>
                         <br>
                         Quiz Questions. </p>
 
                     <p class="time">I plan to <i>devote</i>...<br>
                         <br>
-                        <input class="txtenter" id="times" type="text" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="weekTime"></span> <br>
+                        <input title="timeInput" class="txtenter" id="timeInput" type="number" onfocus="if(this.value == LambdaLib.SP.getLayout().time) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="timeLayout"></span> <br>
                         <br>
                         hours to the course. </p>
 
@@ -303,10 +306,10 @@
                 <p id="subError"></p>
                 <p class="pHolder" style="visibility: hidden">Place</p>
 
-                <input type="submit" value="Submit" class="emerald-flat-button">
+                <input type="button" value="Submit" class="emerald-flat-button">
                 <br>
                 <p id="buts">
-                    <input type="button" id="revealBtn" value="View Progress" class="emerald-flat-button-small">
+                    <input type="button" id="revealBtn" value="View Progress" onclick="LambdaLib.SP.quantityToggle()" class="emerald-flat-button-small">
                 </p>
             </form>
         </div>
