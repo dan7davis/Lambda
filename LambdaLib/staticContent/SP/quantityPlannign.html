@@ -187,6 +187,8 @@
         padding: 0;
         border: none;
         border-bottom: solid 3px #c9c9c9;
+        height: 35px;
+        width: 75px;
     }
 
     .emerald-flat-button {
@@ -285,19 +287,19 @@
                 <div class="three">
                     <p class="vid">I plan to <i>watch</i>...<br>
                         <br>
-                        <input title="videoInput" class="txtenter" id="videoInput" type="number" onfocus="if(this.value == LambdaLib.SP.getLayout().videos) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="videoLayout"></span> <br>
+                        <input title="videoInput" class="txtenter" id="videoInput" type="number" onblur="if(this.value == '') { this.value = LambdaLib.SP.getGoals().videos}" onfocus="if(this.value == LambdaLib.SP.getGoals().videos) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="videoLayout"></span> <br>
                         <br>
                         Lecture Videos. </p>
 
                     <p class="quiz">I plan to <i>answer</i>...<br>
                         <br>
-                        <input title="problemInput" class="txtenter" id="problemInput" type="number" onfocus="if(this.value == LambdaLib.SP.getLayout().problems) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="problemLayout"></span> <br>
+                        <input title="problemInput" class="txtenter" id="problemInput" type="number" onblur="if(this.value == '') { this.value = LambdaLib.SP.getGoals().problems}" onfocus="if(this.value == LambdaLib.SP.getGoals().problems) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="problemLayout"></span> <br>
                         <br>
                         Quiz Questions. </p>
 
                     <p class="time">I plan to <i>devote</i>...<br>
                         <br>
-                        <input title="timeInput" class="txtenter" id="timeInput" type="number" onfocus="if(this.value == LambdaLib.SP.getLayout().time) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="timeLayout"></span> <br>
+                        <input title="timeInput" class="txtenter" id="timeInput" type="number" onblur="if(this.value == '') { this.value = LambdaLib.SP.getGoals().time}" onfocus="if(this.value == LambdaLib.SP.getGoals().time) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="timeLayout"></span> <br>
                         <br>
                         hours to the course. </p>
 
@@ -306,7 +308,7 @@
                 <p id="subError"></p>
                 <p class="pHolder" style="visibility: hidden">Place</p>
 
-                <input type="button" value="Submit" class="emerald-flat-button">
+                <input type="button" value="Submit" onclick="LambdaLib.SP.saveGoal()" class="emerald-flat-button">
                 <br>
                 <p id="buts">
                     <input type="button" id="revealBtn" value="View Progress" onclick="LambdaLib.SP.quantityToggle()" class="emerald-flat-button-small">

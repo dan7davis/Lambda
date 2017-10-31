@@ -65,11 +65,10 @@ function LambdaSetupCheck(type) {
 
 function loadNeededModules() {
     //Base module
-    loadScriptSync("https://server.casparkrijgsman.com/static/lambda-edx-lib.js");
-
+    loadScriptSync("https://server.casparkrijgsman.com/static/librarys/lambda-edx-lib.js");
     //SP-module
-    loadScriptSync("https://server.casparkrijgsman.com/static/sp/progressbar.min.js");
-    loadScriptSync("https://server.casparkrijgsman.com/static/sp/lambda-study-planning.js");
+    loadScriptSync("https://server.casparkrijgsman.com/static/librarys/progressbar.min.js");
+    loadScriptSync("https://server.casparkrijgsman.com/static/librarys/lambda-study-planning.js");
 }
 
 function loadScriptSync (src) {

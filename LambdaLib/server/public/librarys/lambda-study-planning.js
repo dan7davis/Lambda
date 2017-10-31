@@ -357,7 +357,6 @@
         SP.setVideos = function (vid) {
             videos = vid;
 
-            //TODO implement in html
         };
 
         /**
@@ -367,7 +366,6 @@
         SP.setTime = function (t) {
             time = t;
 
-            //TODO implement in html
         };
 
         /**
@@ -382,6 +380,10 @@
             SP.setProblems(prob);
             SP.setVideos(vid);
             SP.setTime(t);
+
+            if (quantityLoaded) {
+                SP.renderBars();
+            }
 
             if (saveToDB) {
                 SP.sendGoals();
@@ -605,9 +607,9 @@
                 $('#timeLayout').text(layout.time);
 
                 //Set defaults values
-                $('#problemInput').val(layout.problems);
-                $('#videoInput').val(layout.videos);
-                $('#timeInput').val(layout.time);
+                $('#problemInput').val(problems);
+                $('#videoInput').val(videos);
+                $('#timeInput').val(time);
             }
         };
 
@@ -648,7 +650,6 @@
 
             let errorCount = 0;
 
-            debugger;
 
             if (vidGoal < 0 || Math.floor(vidGoal) < vidGoal || typeof vidGoal !== 'number') {
                 errorCount++;
@@ -769,7 +770,9 @@
             ) {
                 SP.loadQuantityPlanning(quantityInput,true);
             } else {
-                setTimeout(SP.waitForQuantityData, 200);
+                setTimeout(function () {
+                    SP.waitForQuantityData(quantityInput);
+                }, 200);
             }
         };
 
