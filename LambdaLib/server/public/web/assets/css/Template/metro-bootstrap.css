@@ -7143,6 +7143,18 @@ button.close {
   background-color:#2ecc71;
 }
 
+.tile.tile-first {
+  background-color: #2036FF;
+}
+
+.tile.tile-second {
+  background-color: #1170E8;
+}
+
+.tile.tile-third {
+  background-color: #29D0FF;
+}
+
 a.fa-links {
   color:#ffffff;
 }

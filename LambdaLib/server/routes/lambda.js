@@ -2,7 +2,6 @@
  * Created by caspar on 10/22/2017.
  */
 let express = require('express');
-let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 
 //Get promise library
@@ -190,6 +189,5 @@ function required(vars) {
     }
     return true;
 }
-
 
 module.exports = router;

@@ -33,10 +33,18 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Set view engine
+app.set('views', "./dashboard/views");
+app.set('view engine', 'jade');
+
 // configure body parser, get data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/static', express.static('public'));
+
+
+
+app.use('/',express.static('public/web'));
 
 
 
@@ -48,6 +56,10 @@ app.use('/lambda', lambda);
 // Study planning will have the /study-planning prefix
 let SP = require("./routes/study-planning");
 app.use('/study-planning', SP);
+
+// dashboard code
+let dashboard = require("./routes/dashboard.js");
+app.use('/dashboard', dashboard);
 
 // START THE SERVER
 // =============================================================================
