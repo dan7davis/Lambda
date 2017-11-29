@@ -1,6 +1,6 @@
 # Lambda
 
-Release Version 1.0 provides the open-sourced [retrieval practice](https://github.com/dan7davis/Lambda/tree/master/retrieval%20practice) code as referenced in the LAK 2018 conference paper titled: "The Half-Life of MOOC Knowledge: A Randomized Trial Evaluating Knowledge Retention and Retrieval Practice in MOOCs"
+**LAK 2018** Release Version 1.0 provides the open-sourced [retrieval practice](https://github.com/dan7davis/Lambda/tree/master/retrieval%20practice) code as referenced in the LAK 2018 conference paper titled: "The Half-Life of MOOC Knowledge: A Randomized Trial Evaluating Knowledge Retention and Retrieval Practice in MOOCs"
   
   ***
   
