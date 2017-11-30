@@ -52,6 +52,9 @@ router.use(function(req, res, next) {
 router.use('/assets',express.static('dashboard/assets'));
 
 router.get("/login",function (req, res) {
+    if (req.session.user) {
+        res.redirect('/dashboard');
+    }
    res.render('login');
 });
 
@@ -84,7 +87,12 @@ router.post("/login", function (req, res) {
 // });
 
 router.get("/", restrict,function (req, res) {
-    res.render('home');
+    res.render('home',{userName: req.session.user.userName});
+});
+
+router.get("/logout", restrict, function (req, res) {
+    req.session.destroy();
+    res.redirect('/dashboard/login');
 });
 
 /**
