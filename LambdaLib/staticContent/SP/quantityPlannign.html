@@ -1,0 +1,319 @@
+<style type="text/css">
+    #videoBar {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height: 100px;
+    }
+
+    #problemBar {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height: 100px;
+    }
+
+    #timeBar {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height: 100px;
+    }
+
+    #videotex {
+        margin: 20px;
+        width: 200px;
+        height: 50px;
+        font-size: 140%;
+    }
+
+    #questiontex {
+        margin: 20px;
+        width: 200px;
+        height: 50px;
+        font-size: 140%;
+    }
+
+    #timetex {
+        margin: 20px;
+        width: 200px;
+        height: 50px;
+        font-size: 140%;
+    }
+
+    .header {
+        font-style: italic;
+        font-family: 'Abel',sans-serif;
+        font-weight: bold;
+        display: flex;
+        font-size: 240%;
+    }
+
+    .emerald-flat-button-small {
+        position: relative !important;
+        display: block !important;
+        vertical-align: top !important;
+        width: 15% !important;
+        clear: both;
+        height: 30px !important;
+        opacity: 1 !important;
+        font-family: 'Abel', sans-serif !important;
+        padding: 0 !important;
+        font-size: 15px !important;
+        color: white !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+        background: #2ecc71 !important;
+        border: 0 !important;
+        border-bottom: 2px solid #28be68 !important;
+        cursor: pointer !important;
+        -webkit-box-shadow: inset 0 -2px #28be68 !important;
+        box-shadow: inset 0 -2px #28be68 !important;
+        transition: all 0.3s ease 0s !important;
+    }
+
+    .titel {
+        text-align: center;
+    }
+
+    .bar {
+        width: 100%;
+        font-size: 16px; !important;
+    }
+
+    .text {
+        font-size: 16PX; !important;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .emerald-flat-button-small:hover {
+        opacity: 0.75 !important;
+    }
+
+    .emerald-flat-button-small:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    #vidText {
+        max-width: 250px
+    }
+
+    #problemText {
+        max-width: 250px
+    }
+
+    #timeText {
+        max-width: 250px
+    }
+
+    #subConfirm {
+        visibility: hidden;
+        display: none;
+        text-align: center;
+        font-weight: bolder;
+        color: #2ecc71;
+    }
+
+    #subError {
+        visibility: hidden;
+        display: none;
+        text-align: center;
+        font-weight: bolder;
+        color: #C84B4B;
+    }
+
+    .vidFeedback {
+        font-weight: bolder;
+    }
+
+    .quizFeedback {
+        font-weight: bolder;
+    }
+
+    .timeFeedback {
+        font-weight: bolder;
+    }
+
+    .main {
+        width: 740px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        font-family: 'Abel', sans-serif !important;
+        font-size: 150%;
+        line-height: 200%;
+    }
+
+    .three {
+        display: flex;
+        justify-content: space-around;
+        font-family: 'Abel', sans-serif !important;
+    }
+
+    p.vid {
+        display: block;
+        width: 200px;
+        font-family: 'Abel', sans-serif !important;
+        text-align: center;
+        margin: 20px;
+    }
+
+    p.quiz {
+        display: block;
+        width: 200px;
+        text-align: center;
+        font-family: 'Abel', sans-serif !important;
+        margin: 20px;
+    }
+
+    p.time {
+        display: block;
+        font-family: 'Abel', sans-serif !important;
+        width: 200px;
+        text-align: center;
+        margin: 20px;
+    }
+
+    p.subm {
+        display: flex;
+        justify-content: center;
+    }
+
+    input.txtenter{
+        font-family: 'Abel', sans-serif !important;
+        font-size: 100%;
+        line-height: 100%;
+        text-align: center;
+        padding: 0;
+        border: none;
+        border-bottom: solid 3px #c9c9c9;
+        height: 35px;
+        width: 75px;
+    }
+
+    .emerald-flat-button {
+        position: relative !important;
+        display: block !important;
+        vertical-align: top !important;
+        width: 30% !important;
+        margin: auto;
+        height: 60px !important;
+        clear: both !important;
+        opacity: 1 !important;
+        font-family: 'Abel', sans-serif !important;
+        padding: 0 !important;
+        font-size: 25px !important;
+        color: white !important;
+        text-align: center !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+        background: #2ecc71 !important;
+        border: 0 !important;
+        border-bottom: 2px solid #28be68 !important;
+        cursor: pointer !important;
+        -webkit-box-shadow: inset 0 -2px #28be68 !important;
+        box-shadow: inset 0 -2px #28be68 !important;
+        transition: all 0.3s ease 0s !important;
+    }
+
+    .emerald-flat-button:hover {
+        opacity: 0.75 !important;
+    }
+
+    .emerald-flat-button:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .feedBackColl {
+        width: 250px;
+        margin-right: 20px;
+    }
+
+    #LambdaQuantityInput {
+        display: none;
+
+    }
+
+    #LambdaQuantityFeedback {
+        display: block;
+    }
+</style>
+
+<!-- HTML Content for the quantity applet -->
+<div id="quantityContent">
+    <div id="LambdaQuantityFeedback">
+        <div class="main">
+            <div id="bars">
+                <p class="header">Progress towards your goals this week:</p>
+                <br>
+                <div class="three">
+                    <div id="col1" class="feedBackColl">
+                        <div class="vidFeedback titel">Videos</div>
+                        <div id="videoBar" class="bar"></div>
+                        <div id="vidText" class="text"></div>
+                    </div>
+                    <div id="col2" class="feedBackColl">
+                        <div class="quizFeedback titel">Questions</div>
+                        <div id="problemBar" class="bar"></div>
+                        <div id="problemText" class="text"></div>
+
+                    </div>
+                    <div id="col3" class="feedBackColl">
+                        <div class="timeFeedback titel">Time (Hours)</div>
+                        <div id="timeBar" class="bar"></div>
+                        <div id="timeText" class="text"></div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <p class="noPlan"></p>
+            <div>
+
+                <br>
+                <p><input id="editGoals" type="button" onclick="LambdaLib.SP.quantityToggle()" value="Edit Goals" class="emerald-flat-button-small"></p>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="LambdaQuantityInput">
+        <div class="main">
+            <p class="header">THIS WEEK...</p>
+            <form id="qtPlan">
+                <div class="three">
+                    <p class="vid">I plan to <i>watch</i>...<br>
+                        <br>
+                        <input title="videoInput" class="txtenter" id="videoInput" type="number" onblur="if(this.value == '') { this.value = LambdaLib.SP.getGoals().videos}" onfocus="if(this.value == LambdaLib.SP.getGoals().videos) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="videoLayout"></span> <br>
+                        <br>
+                        Lecture Videos. </p>
+
+                    <p class="quiz">I plan to <i>answer</i>...<br>
+                        <br>
+                        <input title="problemInput" class="txtenter" id="problemInput" type="number" onblur="if(this.value == '') { this.value = LambdaLib.SP.getGoals().problems}" onfocus="if(this.value == LambdaLib.SP.getGoals().problems) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="problemLayout"></span> <br>
+                        <br>
+                        Quiz Questions. </p>
+
+                    <p class="time">I plan to <i>devote</i>...<br>
+                        <br>
+                        <input title="timeInput" class="txtenter" id="timeInput" type="number" onblur="if(this.value == '') { this.value = LambdaLib.SP.getGoals().time}" onfocus="if(this.value == LambdaLib.SP.getGoals().time) { this.value = ''; }" name="pin" maxlength="4" size="2" style="font-size:120%"> / <span id="timeLayout"></span> <br>
+                        <br>
+                        hours to the course. </p>
+
+                </div>
+                <p id="subConfirm">Response saved!</p>
+                <p id="subError"></p>
+                <p class="pHolder" style="visibility: hidden">Place</p>
+
+                <input type="button" value="Submit" onclick="LambdaLib.SP.saveGoal()" class="emerald-flat-button">
+                <br>
+                <p id="buts">
+                    <input type="button" id="revealBtn" value="View Progress" onclick="LambdaLib.SP.quantityToggle()" class="emerald-flat-button-small">
+                </p>
+            </form>
+        </div>
+    </div>
+</div>

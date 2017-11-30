@@ -1,0 +1,248 @@
+<!-- Quality planning -->
+<!-- Styles for the quality applet -->
+<link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+<style type="text/css">
+
+    .main {
+        width: 740px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        font-family: 'Abel', sans-serif;
+        font-size: 150%;
+        line-height: 200%;
+    }
+
+    p.left {
+        width: 70px;
+        float: left;
+        font-size: 500%;
+        font-family: Times, serif;
+        opacity: 0.5;
+        margin-bottom: 0;
+    }
+
+    p.midd {
+        width: 500px;
+        float: left;
+        margin-bottom: 0;
+    }
+
+    p.attr {
+        width: 400px;
+        float: left;
+        text-align: right;
+    }
+
+    p.rite {
+        width: 70px;
+        float: left;
+        text-align: right;
+        font-size: 500%;
+        font-family: Times, serif;
+        opacity: 0.5;
+        margin-bottom: 0;
+    }
+
+    #header {
+        font-style: italic;
+        font-weight: bold;
+        font-family: 'Abel', sans-serif;
+        display: flex;
+        font-size: 240%;
+        margin-bottom: 0;
+    }
+
+    #LambdaQuote {
+        font-size: 240%;
+        margin-bottom: 0;
+    }
+
+    .midd {
+        font-family: 'Abel', sans-serif !important;
+        font-size: 180%;
+        margin-bottom: 0;
+    }
+
+    .attr {
+        font-family: 'Abel', sans-serif !important;
+        font-size: 180%
+    }
+
+
+    .emerald-flat-button-small {
+        position: relative !important;
+        display: block !important;
+        vertical-align: top !important;
+        width: 15% !important;
+        clear: both;
+        height: 30px !important;
+        opacity: 1 !important;
+        font-family: 'Abel', sans-serif !important;
+        padding: 0 !important;
+        font-size: 15px !important;
+        color: white !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+        background: #2ecc71 !important;
+        border: 0 !important;
+        border-bottom: 2px solid #28be68 !important;
+        cursor: pointer !important;
+        -webkit-box-shadow: inset 0 -2px #28be68 !important;
+        box-shadow: inset 0 -2px #28be68 !important;
+        transition: all 0.3s ease 0s !important;
+    }
+
+    .emerald-flat-button-small:hover {
+        opacity: 0.75 !important;
+    }
+
+    .emerald-flat-button-small:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .main {
+        width: 740px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        font-family: 'Abel', sans-serif;
+        font-size: 150%;
+        line-height: 200%;
+    }
+
+    .style-2 input[type="text"] {
+        padding: 10px;
+        border: solid 5px #c9c9c9;
+        transition: border 0.3s;
+        width: 520px;
+        height: 200px;
+
+    }
+
+    .style-2 input[type="text"]:focus{
+        border: solid 5px #969696;
+    }
+
+    #three {
+        display: flex;
+        justify-content: center;
+    }
+
+    h2 {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    input {
+        padding: 12px 20px;
+        margin: 8px 0;
+        color: black;
+        font-size: 15px;
+        font-family: 'Abel', sans-serif;
+        vertical-align: top;
+    }
+
+    #header {
+        font-style: italic;
+        font-weight: bold;
+        font-family: 'Abel',sans-serif;
+        display: flex;
+        font-size: 240%;
+        margin-bottom: 0;
+    }
+
+    textarea#QualityTextArea {
+        width: 620px;
+        height: 200px;
+        border: 5px solid #cccccc;
+        padding: 5px;
+        font-family: 'Abel', sans-serif;
+        background: no-repeat bottom right;
+        font-size: 25px;
+        line-height: 150%;
+    }
+
+    #buts {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .emerald-flat-button {
+        position: relative !important;
+        display: block !important;
+        vertical-align: top !important;
+        width: 30% !important;
+        height: 60px !important;
+        clear: both !important;
+        opacity: 1 !important;
+        font-family: 'Abel', sans-serif !important;
+        padding: 0 !important;
+        font-size: 25px !important;
+        color: white !important;
+        text-align: center !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+        background: #2ecc71 !important;
+        border: 0 !important;
+        border-bottom: 2px solid #28be68 !important;
+        cursor: pointer !important;
+        -webkit-box-shadow: inset 0 -2px #28be68 !important;
+        box-shadow: inset 0 -2px #28be68 !important;
+        transition: all 0.3s ease 0s !important;
+    }
+
+    .emerald-flat-button:hover {
+        opacity: 0.75 !important;
+    }
+
+    .emerald-flat-button:active {
+        top: 1px !important;
+        outline: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    #LambdaQualityFeedback {
+        display: block;
+    }
+
+    #LambdaQualityInput {
+        display: none;
+    }
+
+</style>
+
+<!-- HTML Content for the quality applet -->
+<div id="qualityContent">
+
+    <div class="main">
+        <p id="header">WHAT DRIVES YOU:</p>
+
+        <div id="LambdaQualityFeedback">
+            <p class="left" id="LambdaQuote">&ldquo;</p>
+            <p class="midd lastQualGoalSet" id="LambdaPlanningText">You haven't set a goal yet. Click "Edit" below to create one.</p>
+            <p class="rite" id="LambdaQuote-close">&rdquo;</p>
+            <p class="left"></p>
+            <p class="attr"> - <span id="dx-username"></span></p>
+            <br><br>
+            <p><input type="button" onclick="LambdaLib.SP.qualityToggle()" value="Edit" class="emerald-flat-button-small"><p>
+            <div id="LambdaFooter"></div>
+        </div>
+
+        <div id="LambdaQualityInput">
+            <form id="qlPlan">
+                <div id="three">
+                    <textarea name="styled-textArea" id="QualityTextArea" placeholder="Enter your motivation here..."></textarea>
+                </div>
+                <br>
+                <p id="buts">
+                    <input type="button" value="Check Existing Plan" onclick="LambdaLib.SP.qualityToggle()" id="revealBtn" class="emerald-flat-button">
+                    <input type="button" value="Submit" onclick="LambdaLib.SP.saveQuote()" class="emerald-flat-button">
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+

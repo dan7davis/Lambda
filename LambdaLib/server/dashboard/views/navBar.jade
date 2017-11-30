@@ -1,0 +1,82 @@
+extends layout
+
+block navBar
+    nav.navbar.navbar-default.top-navbar(role='navigation')
+        .navbar-header
+            button.navbar-toggle.waves-effect.waves-dark(type='button', data-toggle='collapse', data-target='.sidebar-collapse')
+                span.sr-only Toggle navigation
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+            a.navbar-brand.waves-effect.waves-dark(href='/dashboard')
+                i.large.material-icons insert_chart
+                strong LAMBDA
+            #sideNav(href='/dashboard')
+                i.material-icons.dp48 toc
+        ul.nav.navbar-top-links.navbar-right
+            li
+                a.dropdown-button.waves-effect.waves-dark(href='#!', data-activates='dropdown2')
+                    i.fa.fa-tasks.fa-fw
+                    i.material-icons.right arrow_drop_down
+            li
+                a.dropdown-button.waves-effect.waves-dark(href='#!', data-activates='dropdown1')
+                    i.fa.fa-user.fa-fw
+                    b#navBarUserName #{userName}
+                    i.material-icons.right arrow_drop_down
+    // Dropdown Structure
+    ul#dropdown1.dropdown-content
+        li
+            a(href='/dashboard/logout')
+                i.fa.fa-sign-out.fa-fw
+                |  Logout
+    ul#dropdown2.dropdown-content.dropdown-tasks.w250
+        li
+            a(href='#')
+                div
+                    p
+                        strong Task 1
+                        span.pull-right.text-muted 60% Complete
+                    .progress.progress-striped.active
+                        .progress-bar.progress-bar-success(role='progressbar', aria-valuenow='60', aria-valuemin='0', aria-valuemax='100', style='width: 60%')
+                            span.sr-only 60% Complete (success)
+        li.divider
+        li
+            a(href='#')
+                div
+                    p
+                        strong Task 2
+                        span.pull-right.text-muted 28% Complete
+                    .progress.progress-striped.active
+                        .progress-bar.progress-bar-info(role='progressbar', aria-valuenow='28', aria-valuemin='0', aria-valuemax='100', style='width: 28%')
+                            span.sr-only 28% Complete
+        li.divider
+        li
+            a(href='#')
+                div
+                    p
+                        strong Task 3
+                        span.pull-right.text-muted 60% Complete
+                    .progress.progress-striped.active
+                        .progress-bar.progress-bar-warning(role='progressbar', aria-valuenow='60', aria-valuemin='0', aria-valuemax='100', style='width: 60%')
+                            span.sr-only 60% Complete (warning)
+        li.divider
+        li
+            a(href='#')
+                div
+                    p
+                        strong Task 4
+                        span.pull-right.text-muted 85% Complete
+                    .progress.progress-striped.active
+                        .progress-bar.progress-bar-danger(role='progressbar', aria-valuenow='85', aria-valuemin='0', aria-valuemax='100', style='width: 85%')
+                            span.sr-only 85% Complete (danger)
+        li.divider
+        li
+    // /. NAV TOP
+    nav.navbar-default.navbar-side(role='navigation')
+        .sidebar-collapse
+            ul#main-menu.nav
+                li
+                    a.active-menu.waves-effect.waves-dark(href='/dashboard')
+                        i.fa.fa-dashboard
+                        |  Dashboard
+    // /. NAV SIDE
