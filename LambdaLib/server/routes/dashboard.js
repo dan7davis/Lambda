@@ -15,7 +15,7 @@ let connectOptions = {
     poolSize: 5
 };
 
-mongoose.connect('mongodb://user:1a4#hkyHBWI&CMeJ@localhost@localhost:27017/Lambda',connectOptions);
+mongoose.connect('mongodb://user:1a4#hkyHBWI&CMeJ@localhost:27017/Lambda',connectOptions);
 
 let Schema = mongoose.Schema;
 
