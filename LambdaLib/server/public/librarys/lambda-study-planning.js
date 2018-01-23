@@ -253,7 +253,7 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response !== 'undefined') {
+                if (response !== null) {
                     if (typeof response.quote !== 'undefined') {
                         SP.setQuote(response.quote, false, false);
                         if (showQualityAfter) {
@@ -491,7 +491,7 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response !== 'undefined') {
+                if (response !== null) {
                     if (typeof response.problems !== 'undefined')
                         SP.setProblems(response.problems);
                     if (typeof response.videos !== 'undefined')
@@ -579,7 +579,7 @@
             };
             $.ajax(settings).done(function (response) {
                 if (typeof response !== 'undefined') {
-                    if (typeof response[0] !== 'undefined'){
+                    if (response[0] !== null){
                         if (typeof response[0].problems !== 'undefined' && typeof response[0].videos !== 'undefined' && typeof response[0].time !== 'undefined')
                             SP.setLayout(response[0].problems, response[0].videos, response[0].time);
                     }
