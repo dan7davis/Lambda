@@ -254,9 +254,11 @@
             };
             $.ajax(settings).done(function (response) {
                 if (typeof response === 'object') {
-                    SP.setQuote(response.quote,false,false);
-                    if (showQualityAfter) {
-                        SP.loadQualityPlanning(qualityInput);
+                    if (typeof response.quote !== 'undefined') {
+                        SP.setQuote(response.quote, false, false);
+                        if (showQualityAfter) {
+                            SP.loadQualityPlanning(qualityInput);
+                        }
                     }
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
@@ -490,9 +492,12 @@
             };
             $.ajax(settings).done(function (response) {
                 if (typeof response === 'object') {
-                    SP.setProblems(response.problems);
-                    SP.setVideos(response.videos);
-                    SP.setTime(response.time);
+                    if (typeof response.problems !== 'undefined')
+                        SP.setProblems(response.problems);
+                    if (typeof response.videos !== 'undefined')
+                        SP.setVideos(response.videos);
+                    if (typeof response.time !== 'undefined')
+                        SP.setTime(response.time);
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
                     quoteReceivedCallback(args);
@@ -574,6 +579,7 @@
             };
             $.ajax(settings).done(function (response) {
                 if (typeof response === 'object') {
+                    if (typeof response[0].problems !== 'undefined' && typeof response[0].videos !== 'undefined' && typeof response[0].time !== 'undefined')
                     SP.setLayout(response[0].problems, response[0].videos, response[0].time);
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
