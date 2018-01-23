@@ -253,7 +253,7 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response === 'object') {
+                if (typeof response !== 'undefined') {
                     if (typeof response.quote !== 'undefined') {
                         SP.setQuote(response.quote, false, false);
                         if (showQualityAfter) {
@@ -491,7 +491,7 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response === 'object') {
+                if (typeof response !== 'undefined') {
                     if (typeof response.problems !== 'undefined')
                         SP.setProblems(response.problems);
                     if (typeof response.videos !== 'undefined')
@@ -578,9 +578,11 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response === 'object') {
-                    if (typeof response[0].problems !== 'undefined' && typeof response[0].videos !== 'undefined' && typeof response[0].time !== 'undefined')
-                    SP.setLayout(response[0].problems, response[0].videos, response[0].time);
+                if (typeof response !== 'undefined') {
+                    if (typeof response[0] !== 'undefined'){
+                        if (typeof response[0].problems !== 'undefined' && typeof response[0].videos !== 'undefined' && typeof response[0].time !== 'undefined')
+                            SP.setLayout(response[0].problems, response[0].videos, response[0].time);
+                    }
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
                     quoteReceivedCallback(args);
