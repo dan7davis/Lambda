@@ -253,13 +253,13 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (response !== null) {
+                if (response !== undefined) {
                     if (typeof response.quote !== 'undefined') {
                         SP.setQuote(response.quote, false, false);
-                        if (showQualityAfter) {
-                            SP.loadQualityPlanning(qualityInput);
-                        }
                     }
+                }
+                if (showQualityAfter) {
+                    SP.loadQualityPlanning(qualityInput);
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
                     quoteReceivedCallback(args);
@@ -772,9 +772,7 @@
          * @param {Boolean} quantityInput, if quantity planing should show input mode
          */
         SP.waitForQuantityData = function (quantityInput) {
-            if (typeof time !== 'undefined'
-                && typeof progress.time !== 'undefined'
-                && typeof layout.time !== 'undefined'
+            if (typeof layout.time !== 'undefined'
             ) {
                 SP.loadQuantityPlanning(quantityInput,true);
             } else {
