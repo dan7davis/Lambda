@@ -691,23 +691,23 @@
          */
         SP.renderBars = function () {
 
-            if(progress.videos === undefined){
+            if(progress.videos === undefined || progress.videos === null){
                 progress.videos = 0;
             }
-            if(progress.problems === undefined){
+            if(progress.problems === undefined || progress.problems === null){
                 progress.problems = 0;
             }
-            if(progress.time === undefined){
+            if(progress.time === undefined || progress.time === null){
                 progress.time = 0;
             }
 
-            if(videos === undefined){
+            if(videos === undefined || videos === null){
                 videos = 0;
             }
-            if(problems === undefined){
+            if(problems === undefined || problems === null){
                 problems = 0;
             }
-            if(time === undefined){
+            if(time === undefined || time === null){
                 time = 0;
             }
 
