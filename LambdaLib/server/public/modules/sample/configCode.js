@@ -55,6 +55,10 @@ function LambdaSetupCheck(type) {
                     LambdaSetupCheck(type);
                 }, 100);
             }
+        } else {
+            setTimeout(function () {
+                LambdaSetupCheck(type);
+            }, 100);
         }
     }
     else {
