@@ -759,12 +759,7 @@
                         step: function (state, bar) {
                             bar.path.setAttribute('stroke', state.color);
                             let value = Math.round(bar.value() * Number(g));
-                            // if (value === 0) {
-                            //     bar.setText('');
-                            // } else {
-                                bar.setText(Math.floor(p) + "/" + g);
-                            // }
-
+                            bar.setText(Math.floor(p) + "/" + g);
                             bar.text.style.color = state.color;
                         }
                     }
