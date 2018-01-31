@@ -692,23 +692,23 @@
         SP.renderBars = function () {
 
             if(progress.videos === undefined || progress.videos === null){
-                progress.videos = 0;
+                progress.videos = 1;
             }
             if(progress.problems === undefined || progress.problems === null){
-                progress.problems = 0;
+                progress.problems = 1;
             }
             if(progress.time === undefined || progress.time === null){
-                progress.time = 0;
+                progress.time = 1;
             }
 
             if(videos === undefined || videos === null){
-                videos = 0;
+                videos = 1;
             }
             if(problems === undefined || problems === null){
-                problems = 0;
+                problems = 1;
             }
             if(time === undefined || time === null){
-                time = 0;
+                time = 1;
             }
 
 
