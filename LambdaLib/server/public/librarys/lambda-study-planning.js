@@ -253,7 +253,7 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (response !== undefined) {
+                if (response !== null) {
                     if (typeof response.quote !== 'undefined') {
                         SP.setQuote(response.quote, false, false);
                     }
