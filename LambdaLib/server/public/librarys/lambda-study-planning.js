@@ -691,6 +691,27 @@
          */
         SP.renderBars = function () {
 
+            if(progress.videos === undefined){
+                progress.videos = 0;
+            }
+            if(progress.problems === undefined){
+                progress.problems = 0;
+            }
+            if(progress.time === undefined){
+                progress.time = 0;
+            }
+
+            if(videos === undefined){
+                videos = 0;
+            }
+            if(problems === undefined){
+                problems = 0;
+            }
+            if(time === undefined){
+                time = 0;
+            }
+
+
             let pro = [];
             pro.push(progress.videos);
             pro.push(progress.problems);
