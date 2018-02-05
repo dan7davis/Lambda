@@ -9,15 +9,16 @@ function LambdaSetup(type) {
     if (!LambdaLib.isSetUp()) {
         //indicate that we run setup.
         LambdaLib.setUp();
+        LambdaLib.SP.useControlGroup(true);
 
         //Set up trackers
-        LambdaLib.setServer("https://server.casparkrijgsman.com");
+        LambdaLib.setServer("https://lambda-sp.ewi.tudelft.nl");
         LambdaLib.trackUser();
         LambdaLib.trackProblems();
         LambdaLib.trackVideo();
 
-        LambdaLib.SP.setQualityRef('https://edge.edx.org/asset-v1:DelftX+DD.003x+2017+type@asset+block@qualityPlanning.html');
-        LambdaLib.SP.setQuantityRef('https://edge.edx.org/asset-v1:DelftX+DD.003x+2017+type@asset+block@quantityPlannign.html');
+        LambdaLib.SP.setQualityRef('https://courses.edx.org/asset-v1:DelftX+CTB3365DWx+1T2018+type@asset+block@qualityPlanning.html');
+        LambdaLib.SP.setQuantityRef('https://courses.edx.org/asset-v1:DelftX+CTB3365DWx+1T2018+type@asset+block@quantityPlannign.html');
         console.log("setUp complete");
     }
 
@@ -54,6 +55,10 @@ function LambdaSetupCheck(type) {
                     LambdaSetupCheck(type);
                 }, 100);
             }
+        } else {
+            setTimeout(function () {
+                LambdaSetupCheck(type);
+            }, 100);
         }
     }
     else {
@@ -65,10 +70,10 @@ function LambdaSetupCheck(type) {
 
 function loadNeededModules() {
     //Base module
-    loadScriptSync("https://server.casparkrijgsman.com/static/librarys/lambda-edx-lib.js");
+    loadScriptSync("https://lambda-sp.ewi.tudelft.nl/static/librarys/lambda-edx-lib.js");
     //SP-module
-    loadScriptSync("https://server.casparkrijgsman.com/static/librarys/progressbar.min.js");
-    loadScriptSync("https://server.casparkrijgsman.com/static/librarys/lambda-study-planning.js");
+    loadScriptSync("https://lambda-sp.ewi.tudelft.nl/static/librarys/progressbar.min.js");
+    loadScriptSync("https://lambda-sp.ewi.tudelft.nl/static/librarys/lambda-study-planning.js");
 }
 
 function loadScriptSync (src) {

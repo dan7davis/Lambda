@@ -9,7 +9,7 @@ let connectOptions = {
     poolSize: 5
 };
 
-mongoose.connect('mongodb://user:W9B2hbLj3rTu@localhost:27017/Lambda',connectOptions);
+mongoose.connect('mongodb://user:1a4#hkyHBWI&CMeJ@localhost:27017/Lambda',connectOptions);
 
 mongoose.connection.on('connected', function () {
     console.log('study-planning: Mongoose default connection open to Lambda database');
@@ -319,7 +319,8 @@ router.route("/getProgress").post(function (req, res) {
                                         return console.error(err);
                                     } else {
                                         //change time to hours
-                                        returner.timeCount = result[0].timeSpendOnCourse / 3600000;
+                                        if(typeof result[0] !== "undefined")
+                                            returner.timeCount = result[0].timeSpendOnCourse / 3600000;
                                         return res.json(returner);
                                     }
                                 }

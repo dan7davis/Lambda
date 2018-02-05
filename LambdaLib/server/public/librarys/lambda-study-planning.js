@@ -253,11 +253,13 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response === 'object') {
-                    SP.setQuote(response.quote,false,false);
-                    if (showQualityAfter) {
-                        SP.loadQualityPlanning(qualityInput);
+                if (response !== null) {
+                    if (typeof response.quote !== 'undefined') {
+                        SP.setQuote(response.quote, false, false);
                     }
+                }
+                if (showQualityAfter) {
+                    SP.loadQualityPlanning(qualityInput);
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
                     quoteReceivedCallback(args);
@@ -489,10 +491,13 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response === 'object') {
-                    SP.setProblems(response.problems);
-                    SP.setVideos(response.videos);
-                    SP.setTime(response.time);
+                if (response !== null) {
+                    if (typeof response.problems !== 'undefined')
+                        SP.setProblems(response.problems);
+                    if (typeof response.videos !== 'undefined')
+                        SP.setVideos(response.videos);
+                    if (typeof response.time !== 'undefined')
+                        SP.setTime(response.time);
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
                     quoteReceivedCallback(args);
@@ -573,8 +578,11 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                if (typeof response === 'object') {
-                    SP.setLayout(response[0].problems, response[0].videos, response[0].time);
+                if (typeof response !== 'undefined') {
+                    if (typeof response[0] !== 'undefined'){
+                        if (typeof response[0].problems !== 'undefined' && typeof response[0].videos !== 'undefined' && typeof response[0].time !== 'undefined')
+                            SP.setLayout(response[0].problems, response[0].videos, response[0].time);
+                    }
                 }
                 if(typeof(quoteReceivedCallback) !== 'undefined') {
                     quoteReceivedCallback(args);
@@ -683,6 +691,27 @@
          */
         SP.renderBars = function () {
 
+            if(progress.videos === undefined || progress.videos === null){
+                progress.videos = 1;
+            }
+            if(progress.problems === undefined || progress.problems === null){
+                progress.problems = 1;
+            }
+            if(progress.time === undefined || progress.time === null){
+                progress.time = 1;
+            }
+
+            if(videos === undefined || videos === null){
+                videos = 1;
+            }
+            if(problems === undefined || problems === null){
+                problems = 1;
+            }
+            if(time === undefined || time === null){
+                time = 1;
+            }
+
+
             let pro = [];
             pro.push(progress.videos);
             pro.push(progress.problems);
@@ -730,12 +759,7 @@
                         step: function (state, bar) {
                             bar.path.setAttribute('stroke', state.color);
                             let value = Math.round(bar.value() * Number(g));
-                            if (value === 0) {
-                                bar.setText('');
-                            } else {
-                                bar.setText(Math.floor(p) + "/" + g);
-                            }
-
+                            bar.setText(Math.floor(p) + "/" + g);
                             bar.text.style.color = state.color;
                         }
                     }
@@ -764,9 +788,7 @@
          * @param {Boolean} quantityInput, if quantity planing should show input mode
          */
         SP.waitForQuantityData = function (quantityInput) {
-            if (typeof time !== 'undefined'
-                && typeof progress.time !== 'undefined'
-                && typeof layout.time !== 'undefined'
+            if (typeof layout.time !== 'undefined'
             ) {
                 SP.loadQuantityPlanning(quantityInput,true);
             } else {

@@ -14,8 +14,8 @@ let bodyParser = require('body-parser');
 
 // This line is from the Node.js HTTPS documentation.
 let options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/server.casparkrijgsman.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/server.casparkrijgsman.com/cert.pem')
+    key: fs.readFileSync('/etc/letsencrypt/live/lambda-sp.ewi.tudelft.nl/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/lambda-sp.ewi.tudelft.nl/cert.pem')
 };
 
 
