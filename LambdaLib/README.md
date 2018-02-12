@@ -9,5 +9,5 @@ The modules folder contains the following modules:
 > - Study planning module -> [lambda-study-planning.js](https://github.com/dan7davis/Lambda/tree/master/LambdaLib/modules/lambda-study-planning.js)
 
 
-for more documentation see the [documentation page](https://server.casparkrijgsman.com/documentation/)
+for more documentation see the [documentation page](https://lambda-sp.ewi.tudelft.nl/documentation/#studyplanning)
  
