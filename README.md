@@ -1,7 +1,7 @@
 # Large-Scale Learning Analytics: Modeling Learner Behavior & Improving Learning Outcomes in Massive Open Online Courses
 
 
-## [SRLx](https://github.com/dan7davis/Lambda/wiki)
+## [SRLx](https://github.com/dan7davis/Lambda/tree/master/study%20planning)
 
 This software allows learners in any edX course to plan their goals/intentions for each course week and monitor their progress towards them in real time. In creating this, I also offer an API to enable any real-time data collection and feedback in edX. Published as: Davis, D., Triglianos, V., Hauff, C., Houben, G.J (2018) SRLx: An Personalized Learner Interface for MOOCs. In Proceedings of the 13th European Conference on Technology-Enhanced Learning, EC-TEL '18.
 
