@@ -45,7 +45,17 @@ var totalWeeks = uniqueWeek.length;
 
 var chaps = [];
 $( ".chapters section" ).each( function( index, element ){
-    chaps.push($( this ).find( "dd" ).length);
+  var chapterQuestions = 0;
+
+  // Parse number of questions out of description
+
+  $(this).find("dd").each(function() {
+    var numQuestions = $(this).text().split("/")[1];
+    chapterQuestions += parseInt(numQuestions); 
+  });
+
+  chaps.push(chapterQuestions); 
+
 });
 var quMap = chaps.reduce(function(acc, cur, i) {
   acc[i] = cur;
