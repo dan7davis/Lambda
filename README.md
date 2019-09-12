@@ -1,20 +1,61 @@
-# Large-Scale Learning Analytics: Modeling Learner Behavior & Improving Learning Outcomes in Massive Open Online Courses
+lambda study planning backend
+-----------------------------
+> **this node server requires:**
+> - [Express](https://expressjs.com/en/starter/installing.html)
+> - [body-parser](https://www.npmjs.com/package/body-parser)
+> - [mongoose](http://mongoosejs.com/docs/index.html)
 
+#### <i class="icon-pencil"></i> Setup
+**node.js server**
 
-## [SRLx](https://github.com/dan7davis/Lambda/tree/master/study%20planning)
+First you will need an node.js server this can be obtained and installed following the instructions on there [website](https://nodejs.org/en/download/).
 
-This software allows learners in any edX course to plan their goals/intentions for each course week and monitor their progress towards them in real time. In creating this, I also offer an API to enable any real-time data collection and feedback in edX. Published as: Davis, D., Triglianos, V., Hauff, C., Houben, G.J (2018) SRLx: An Personalized Learner Interface for MOOCs. In Proceedings of the 13th European Conference on Technology-Enhanced Learning, EC-TEL '18.
+After the node.js server is installed you'll need to install (and probably save) the required library as listed in the requirements above.
 
+**Configuration the server**
 
-## [Adaptive Retrieval Practice](https://github.com/dan7davis/Lambda/tree/master/retrieval%20practice)
+All the server code, including it's configurations is in the server.js file. In this file there are a few settings you may need to change in order to run the server.
+This server runs on only on https and this port can be configured on line 60.
+*Default server port:*
+```
+// port:
+var port     = process.env.PORT || 8080; // Use the enviorment port or use 8080 if enviorment is not set
+```
 
-This software encourages retrieval practice (or the testing effect) by sporadically presenting edX learners with a quiz question from a previous section/chapter in the course. We also used the data collected from it to track the extent to which MOOC learners retain knowledge over the long term. Published as: Davis, D., Kizilcec, R.F., Hauff, C., Houben, G.J. (2018) The Half-Life of MOOC Knowledge: A Randomized Trial Evaluating the Testing Effect in MOOCs. In Proceedings of 8th International Conference on Learning Analytics and Knowledge, LAK ’18.
+If you need to change the request settings this can be done at line 63 and 64 in server.js.
 
+*Default server request settings:*
+```
+// header settings
+res.header("Access-Control-Allow-Origin", "*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Accept, X-CSRFToken, chap, seq, vert");
+```
 
-## [Learning Tracker](https://github.com/ioanajivet/LearningTracker)
+In order to use the https option a valid http certificate and key are needed. The path to these key and certificate are specified in server.js on line 12 and 13
 
-This weekly feedback mechanism for edX learners shows a spider chart comparing their behavior to previously successful learners. Published as: Davis, D., Jivet, I., Kizilcec, R.F., Chen, G., Hauff, C., Houben, G.J. (2017) Follow the Successful Crowd: Raising MOOC Completion Rates through Social Comparison at Scale. In Proceedings of 7th International Conference on Learning Analytics and Knowledge, LAK ’17.
+*Default server https settings:*
+```
+var options = {
+    key: fs.readFileSync('[path to key file]'),
+    cert: fs.readFileSync('[path to certificate file]')
+};
+```
 
-## [VidQuiz](https://github.com/dan7davis/In-Video-Quizzing)
+To set the database name for the mongoDB you can change this url on line 26 to you database nam:
 
-This software exists because I wanted to do an experiment using in-video quizzes and found a total scarcity of open-source in-video quizing software. This software enables the creation of in-video quizzes (as well as normal quizzes and normal videos) with full activity logging capabilities. This has also been built in a way that makes it ready to be used in crowdsourcing contexts by using a token assignment/validation system. Published as: Davis, D., Hauff, C., Houben, G.J. (2018) Evaluating Crowdworkers as a Proxy for Online Learners in Video-Based Learning Contexts. In Proceedings of  the 21st ACM Conference on Computer-Supported Cooperative Work and Social Computing, CSCW ’18.
+  *Default server database settings:*
+```
+// Build the connection string
+var dbURL = 'localhost:27017/SP';
+// <Host>:<Port>/<custom-Database-name>
+```
+
+**running the server**
+
+after everything is configured use the `node server.js` command to run the server. If this doesn't work check on the node.js documentation if the running method changed.
+If everything goes well the following message should appear:
+`Node server start on port: [Port]`
+
+If you need to mange multiple servers I  recomend that you take a look at [pm2](http://pm2.keymetrics.io/)
+
+Now that the server is running it is time to implement some modules in the course.
